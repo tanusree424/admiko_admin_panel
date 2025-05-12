@@ -1,0 +1,26 @@
+<?php
+
+namespace  App\Mail;
+
+use Illuminate\Bus\Queueable;
+use Illuminate\Mail\Mailable;
+use Illuminate\Queue\SerializesModels;
+
+class POUploadedMail extends Mailable
+{
+    use Queueable, SerializesModels;
+
+    public $userEmail;
+
+    public function __construct($userEmail)
+    {
+        $this->userEmail = $userEmail;
+    }
+
+    public function build()
+    {
+        return $this->subject('Purchase Order Uploaded')
+                    ->view('admin.emails.po_uploaded')
+                    ->with(['email' => $this->userEmail]);
+    }
+}

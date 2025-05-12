@@ -1,0 +1,106 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <title>Purchase Orders</title>
+    <style>
+        .table {
+            width: 100%;
+            border-collapse: collapse;
+            font-size: 12px;
+        }
+
+        .table th,
+        td {
+            border: 1px solid #000;
+            padding: 5px;
+            text-align: center;
+        }
+
+        .table th {
+            background: #f0f0f0;
+        }
+
+        .blue_line {
+            height: 20px;
+            background: blue;
+        }
+
+        .blue_color {
+            color: blue;
+        }
+
+        .font-bold {
+            font-weight: bold;
+        }
+
+        .text-right {
+            text-align: right;
+        }
+
+        .text-left {
+            text-align: left;
+        }
+
+        .text-center {
+            text-align: center;
+        }
+    </style>
+</head>
+
+<body>
+    <div class="blue_line"></div>
+    <h1 style="text-align: right; line-height:6px" class="blue_color">PURCHASE ORDER</h1>
+    <table>
+        <tr>
+            <td class="font-bold text-left">FOUR PILLARS DISTRIBUTION (SINGAPORE) PTE.LTD.</td>
+            <td>PO #</td>
+        </tr>
+        <tr>
+            <td class="font-bold text-left"> Business Number (UEN:202318863N)</td>
+            <td>PO25-HNW001</td>
+        </tr>
+        <tr>
+            <td class="text-left" rowspan="2"> 133 NEW BRIDGE ROAD
+                #10-03 CHINATOWN POINT SINGAPORE 059413</td>
+            <td> DATE <br> 28-Mar-25</td>
+        </tr>
+        <tr>
+            <td> TOTAL PO VALUE ($) <br> $52,758.00</td>
+        </tr>
+    </table>
+
+
+    <table class="table">
+        <thead>
+            <tr>
+                <th>NO</th>
+                <th>Distributor</th>
+                <th>Product ID</th>
+                <th>Order Time</th>
+                <th>Order Price</th>
+                <th>MOQ</th>
+                <th>Order Qty</th>
+                <th>Updated Time</th>
+                <th>Excel ID</th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach($purchaseorders as $order)
+            <tr @if($order->orderqty < $order->moq) style="background-color: #fdd;" @endif>
+                    <td>{{ $order->id }}</td>
+                    <td>{{ $order->distributorid }}</td>
+                    <td>{{ $order->partcode }}</td>
+                    <td>{{ $order->ordertime }}</td>
+                    <td>{{ $order->orderprice }}</td>
+                    <td>{{ $order->moq }}</td>
+                    <td>{{ $order->orderqty }}</td>
+                    <td>{{ $order->updatedtime }}</td>
+                    <td>{{ $order->excelid }}</td>
+            </tr>
+            @endforeach
+        </tbody>
+    </table>
+</body>
+
+</html>

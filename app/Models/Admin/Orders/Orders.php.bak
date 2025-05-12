@@ -1,0 +1,79 @@
+<?php
+/**
+* @author Admiko
+* @copyright Copyright (c) Admiko
+* @link https://admiko.com
+* @Help We are committed to delivering the best code quality and user experience. If you have suggestions or find any issues, please don't hesitate to contact us. Thank you.
+* This file is managed by Admiko and is not recommended to be modified.
+* Any custom code should be added elsewhere to avoid losing changes during updates.
+* However, in case your code is overwritten, you can always restore it from a backup folder.
+*/
+namespace App\Models\Admin\Orders;
+use Illuminate\Database\Eloquent\Model;
+use App\Models\Admin\AdminUsers\AdminUsers;
+use Illuminate\Support\Facades\DB;
+
+
+class Orders extends Model
+{
+    
+    public $table = 'orders';
+ 
+    public static function findAllOrders()
+    {
+        return self::where('enabled', 1)->orderBy('created_at', 'desc')->get();
+    }
+
+
+    public static function findOrderByUserId($userId)
+    {
+        if($userId > 0){
+            return self::select('orders.*', 'admin_users.name as admin_name', 'admin_users.id as admin_id')
+                    ->join('admin_users', 'orders.created_by', '=', 'admin_users.id')
+                    ->where('orders.created_by', $userId)
+                    ->where('orders.enabled', 1)
+                    ->orderBy('orders.created_at', 'desc')
+                    ->get();
+        }
+        return self::select('orders.*', 'admin_users.name as admin_name', 'admin_users.id as admin_id')
+                ->join('admin_users', 'orders.created_by', '=', 'admin_users.id')
+                ->where('orders.enabled', 1)
+                ->orderBy('orders.created_at', 'desc')
+                ->get();
+    }
+
+
+    public static function findById($id)
+    {
+        return DB::table('orders as os')
+            ->join('admin_users as ua', 'ua.id', '=', 'os.created_by')
+            ->select(
+                'os.id',
+                'os.order_number',
+                DB::raw("DATE_FORMAT(os.created_at, '%d-%b-%Y') as order_date"),
+                'ua.name as created_by'
+            )
+            ->where('os.id', $id)
+            ->where('os.enabled', 1)
+            ->first();
+    }
+
+
+    public static function findOrderById($id)
+    {
+        return DB::select('SELECT os.id, os.order_number, au.name AS username, au.id as admin_id, au.email, os.created_at, os.updated_at FROM orders os JOIN admin_users au ON au.id = os.created_by WHERE os.created_by = ? AND os.enabled = 1', [$id]);
+    }
+
+    public function Creator()
+    {
+        return $this->belongsTo(AdminUsers::class, 'created_by');
+    }
+
+
+
+public static function updateOrderStatus($orderId)
+{
+    return self::where('id', $orderId)->update(['enabled' => 0]);
+}
+
+}

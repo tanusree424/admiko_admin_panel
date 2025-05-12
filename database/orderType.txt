@@ -1,0 +1,49 @@
+CREATE TABLE order_type(
+id INT AUTO_INCREMENT PRIMARY KEY,
+name VARCHAR(250),
+enabled INT  DEFAULT 1
+);
+
+INSERT INTO order_type(NAME) VALUES('PO'),('Sales'),('Stock');
+
+
+2
+
+ALTER TABLE purchaseorders_preview ADD orderid INT;
+ALTER TABLE purchaseorders ADD orderid INT;
+alter table countries add currency varchar(250);
+
+
+
+DROP TABLE IF EXISTS company_addresses;
+CREATE TABLE company_addresses (
+    id INT AUTO_INCREMENT PRIMARY KEY,
+    billing_address TEXT NOT NULL,
+    shipping_address TEXT NOT NULL,
+    created_by INT,
+    updated_by INT,
+    created_at DATETIME DEFAULT CURRENT_TIMESTAMP,
+    enabled INT  DEFAULT 1,
+    updated_at TIMESTAMP NULL DEFAULT NULL,
+    admin_user_lid INT
+);
+
+DROP TABLE IF EXISTS vendor_address;
+CREATE TABLE vendor_address (
+    id INT AUTO_INCREMENT PRIMARY KEY,
+    v_name varchar(1000),
+    address TEXT NOT NULL,
+    created_by INT
+);
+
+
+insert into vendor_address(v_name, address) values('SECURE CONNECTION LIMITED','Flat H, 11th Floor Tower 6, Grand Water Front 38 San Ma Tau Street To Kwa Wan, KL, Hong Kong');
+
+
+ALTER TABLE salesreports ADD orderid INT;
+ALTER TABLE salesreports ADD created_by INT;
+ALTER TABLE stockreports ADD orderid INT;
+ALTER TABLE stock_upload_preview ADD orderid INT;
+
+ALTER TABLE salesreports ADD enabled INT DEFAULT 1;
+ALTER TABLE stockreports ADD enabled INT DEFAULT 1;

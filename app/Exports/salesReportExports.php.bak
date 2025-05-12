@@ -1,0 +1,52 @@
+<?php
+
+namespace App\Exports;
+
+use Maatwebsite\Excel\Concerns\FromCollection;
+use Maatwebsite\Excel\Concerns\WithHeadings;
+use Maatwebsite\Excel\Concerns\WithEvents;
+use Maatwebsite\Excel\Events\AfterSheet;
+use Maatwebsite\Excel\Concerns\ShouldAutoSize;
+use DB;
+
+class salesReportExport implements FromCollection, WithHeadings, WithEvents, ShouldAutoSize
+{
+
+public function collection()
+{
+    $salesReport = DB::table('products as p')
+        ->select(
+            'p.productname',
+            'p.partcode',
+            'p.partdescription',
+            'c.catname',
+            'b.brandname'
+            
+        )
+        ->join('categories as c', 'p.category', '=', 'c.id')
+        ->join('brands as b', 'p.brand', '=', 'b.id')
+        ->leftJoin('salesreports as s', 'p.partcode', '=', 's.productid')
+        ->where('p.status', 'Active')
+        // ->where('s.enabled', '1') // Uncomment this line if you need to filter enabled sales reports
+        ->distinct()
+        ->get();
+
+    return collect($salesReport);
+}
+	 
+
+    public function headings(): array
+    {
+        return ['Part Name','Part Code','Part Description','Category','Brand','Invoice Number','Invoice Date',
+        'Customer Name','Location','Channel','Qty','Original Unit Price','Gross Amount'];
+    }
+
+    public function registerEvents(): array
+    {
+        return [
+            AfterSheet::class => function(AfterSheet $event) {
+                $event->sheet->getDelegate()->getStyle('A:M')->getFont()->setSize(12); // To Perform Sheet styling
+            },
+        ];
+    }
+}
