@@ -10,7 +10,7 @@
 */
 namespace App\Http\Controllers\Admin\SubCategories;
 use App\Http\Controllers\Controller;
-use App\Models\Admin\SubCategories\SubCategories as SubCategories;
+use App\Models\Admin\SubCategories\SubCategories;
 use App\Requests\Admin\SubCategories\SubCategoriesRequestExtended as SubCategoriesRequest;
 use Illuminate\Support\Facades\Gate;
 class SubCategoriesController extends Controller
@@ -24,11 +24,14 @@ class SubCategoriesController extends Controller
         }
 		$menu = $this->menu;
 
-        $sub_categories_list_all = SubCategories::startSearch(Request()->query("sub_categories_search"))->orderByDesc("id")->get();
-       
+       $sub_categories_list_all = SubCategories::withTrashed()
+    ->startSearch(Request()->query("sub_categories_search"))
+    ->orderByDesc("id")
+    ->get();
 
+        
   
-         return view("admin.subCategories.index")->with(compact('menu','sub_categories_list_all'))->fragmentIf(Request()->ajax_call==1, "sub_categories_fragment");
+     return view("admin.subCategories.index")->with(compact('menu','sub_categories_list_all'))->fragmentIf(Request()->ajax_call==1, "sub_categories_fragment");
     }
 
     public function create()
@@ -59,16 +62,18 @@ class SubCategoriesController extends Controller
         abort(404);
     }
 
-    public function edit()
-    {
-        if (Gate::none('sub_categories_edit')) {
-            abort(403);
-        }
-        $menu = $this->menu;
-        $data = SubCategories::findOrFail(request()->route()->categories_id);;
-        
-        return view("admin.subCategories.form")->with(compact('menu', 'data'));
+ public function edit()
+{
+   if (Gate::none('sub_categories_edit')) {
+       abort(403);
     }
+
+    $menu = $this->menu;
+    $data = SubCategories::findOrFail(request()->route('sub_categories_id'));
+    // dd($data);
+    return view("admin.subCategories.form")->with(compact('menu', 'data'));
+}
+
 
     public function update(CategoriesRequest $request)
     {

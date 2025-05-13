@@ -52,11 +52,12 @@ Sub Categories
                             <label for="category">Category</label>
                         </div>
                         <div class="input-data">
-                            <select class="form-select" id="category" name="category" >
+                            <select class="form-select" id="category" name="category_id" >
                                 <option value="">{{trans("admin/form.select")}}</option>
 								@foreach($data->categoryListAll() as $row)
-                                    <option value="{{ $row->id }}" {{ (old('category') ? old('category') : $data->category ?? '') == $row->id ? 'selected' : '' }}>{{ $row->catname }} </option>
-                                @endforeach
+                               <option value="{{ $row->id }}" {{ (old('category_id', $data->category_id ?? '') == $row->id) ? 'selected' : '' }}>
+
+                                   @endforeach
                             </select>
                             <div class="error-message @if ($errors->has('category')) show @endif">{{trans('admin/form.required_text')}}</div>
                             <div class="text-muted" id="category_help"></div>
@@ -113,7 +114,8 @@ Sub Categories
                     </div>
                 </div>
         </div>
-        @includeIf("admin.admin_layout.partials.form.footer",["cancel_route"=>route("admin.categories.index")])
+        @includeIf("admin.admin_layout.partials.form.footer",["cancel_route"=>route("admin.sub_categories.index")])
+
     </form>
 </div>
 @isset($data->id)

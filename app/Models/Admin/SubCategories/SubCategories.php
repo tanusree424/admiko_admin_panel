@@ -46,10 +46,10 @@ class SubCategories extends Model
     /**
      * Relationship to Categories
      */
-    public function category()
-    {
-        return $this->belongsTo(Categories::class, 'category');
-    }
+    // public function category()
+    // {
+    //     return $this->belongsTo(Categories::class, 'category');
+    // }
 
     /**
      * Get sorted category list

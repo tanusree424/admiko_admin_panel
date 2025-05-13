@@ -89,7 +89,7 @@
                         <td class="manage-td">
                             <div class="manage-links">
                                 @can('sub_categories_edit')
-                                    <a href="{{route("admin.sub_categories.edit", $data->id)}}" class="edit-link" draggable="false">@includeIf("admin/admin_layout/partials/misc/icons/edit_icon")</a>
+                                    <a href="{{route('admin.sub_categories.edit', $data->id)}}" class="edit-link" draggable="false">@includeIf("admin/admin_layout/partials/misc/icons/edit_icon")</a>
                             @endcan
                                 @can('sub_categories_delete')
                                 <a href="#" data-id="{{$data->id}}" class="delete-link js-ak-delete-link" draggable="false">@includeIf("admin/admin_layout/partials/misc/icons/delete_icon")</a>
