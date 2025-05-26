@@ -36,6 +36,7 @@ class AdminUsers extends Model
 		"theme",
 		"show_theme",
 		"active",
+        "country_id",
 		"team_id",
     ];
     

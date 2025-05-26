@@ -20,8 +20,9 @@ use App\Http\Controllers\Admin\AdminService\Traits\AdminMultiTenantTrait;
 class SubCategories extends Model
 {
     use SoftDeletes, AdminAuditableTrait, AdminMultiTenantTrait;
+	
 
-    public $table = 'sub_categories';
+    public  $table = 'sub_categories';
     
     protected $dates = [
         'created_at',
@@ -30,9 +31,9 @@ class SubCategories extends Model
     ];
 
     protected $fillable = [
+		'id',
         'name',
         'status',
-        'category_id', 
         'created_at',
         'updated_at',
     ];
@@ -43,45 +44,24 @@ class SubCategories extends Model
         'Inactive' => 'Inactive',
     ];
 
-    /**
-     * Relationship to Categories
-     */
-    // public function category()
-    // {
-    //     return $this->belongsTo(Categories::class, 'category');
-    // }
-
-    /**
-     * Get sorted category list
-     */
-    public function categoryListAll()
-    {
-        return Categories::all()->sortBy('catname');
-    }
-
-    /**
-     * Scope: apply sorting based on request input
-     */
+   
+    //const STATUS_CONS = ["Active"=>"Active","Inactive"=>"Inactive"];
     public function scopeStartSorting($query, $request)
     {
         if ($request->has('sub_categories_sort_by') && $request->sub_categories_sort_by) {
-            if ($request->sub_categories_direction == "desc") {
+            if($request->sub_categories_direction == "desc"){
                 $query->orderByDesc($request->sub_categories_sort_by);
             } else {
                 $query->orderBy($request->sub_categories_sort_by);
             }
         } else {
-            $query->orderByDesc('id');
+            $query->orderByDesc("id");
         }
     }
-
-    /**
-     * Scope: apply search filter
-     */
-    public function scopeStartSearch($query, $search)
+	public function scopeStartSearch($query, $search)
     {
         if ($search) {
-            $query->where('id', 'like', '%' . $search . '%');
+            $query->where("id","like","%".$search."%");
         }
     }
 }

@@ -1,0 +1,23 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <title>Stock/PO/Sales Report Uploaded</title>
+</head>
+<body>
+    <h2>Stock Report Upload Confirmation</h2>
+
+    <p>Dear Team,</p>
+
+    <p>This is to inform you that a stock report has been successfully uploaded.</p>
+
+    <p><strong>Order Number:</strong> {{ $orderNumber }}</p>
+
+    <p>Please login to the admin panel to review the details.</p>
+
+    <br>
+
+    <p>Thanks,<br>
+    Admin Panel</p>
+</body>
+</html>

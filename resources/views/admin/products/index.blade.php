@@ -60,11 +60,15 @@ Products
 						<th class="table-id" data-sort-method="number">ID</th>
 						<th class="text-nowrap">Brand</th>
 						<th class="text-nowrap">Category</th>
+						<th class="text-nowrap">SubCategory</th>
 						<th class=" table-col-hide-sm">Item Code</th>
 						<th class=" table-col-hide-sm">part Code</th>
+						<th class=" table-col-hide-sm">EAN Code</th>
+						<th class=" table-col-hide-sm">HSN Code</th>
+
 						<th class=" table-col-hide-sm">part Description</th>
-						<th class=" table-col-hide-sm">created By</th>
-						<th class=" table-col-hide-sm">created Time</th>
+					<!--	<th class=" table-col-hide-sm">created By</th>
+						<th class=" table-col-hide-sm">created Time</th>-->
                         @canany(['products_edit','products_delete'])
                         <th class="no-sort manage-th" data-orderable="false">
                             <div class="manage-links">
@@ -87,6 +91,11 @@ Products
 						</td>
 						<td class="text-nowrap">
 
+							@if($data->scategoriesToValue->name ??false){{($data->scategoriesToValue->name )}} @endif
+
+						</td>
+						<td class="text-nowrap">
+
 							@if($data->categoryToValue->catname??false){{($data->categoryToValue->catname)}} @endif
 
 						</td>
@@ -97,14 +106,20 @@ Products
 							{{$data->partcode}}
 						</td>
 						<td class=" table-col-hide-sm">
-							{{$data->partdescription}}
+							{{$data->eancode}}
 						</td>
 						<td class=" table-col-hide-sm">
+							{{$data->hsncode}}
+						</td>
+						<td class=" table-col-hide-sm">
+							{{$data->partdescription}}
+						</td>
+						<!--<td class=" table-col-hide-sm">
 							{{$data->createdby}}
 						</td>
 						<td class=" table-col-hide-sm">
 							{{$data->createdtime}}
-						</td>
+						</td>-->
                         @canany(['products_edit','products_delete'])
                         <td class="manage-td">
                             <div class="manage-links">

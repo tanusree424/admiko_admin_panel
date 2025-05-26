@@ -48,6 +48,21 @@ Countries
                         </div>
                     </div>
                 </div>
+				<div class="row-100 el-box-text">
+                    <div class="input-container">
+                        <div class="input-label">
+                            <label for="region">region<span class="required">*</span></label>
+                        </div>
+                        <div class="input-data">
+                            <input type="text" class="form-input" id="region" autocomplete="off"
+                                   name="region" required placeholder="region"
+                                   value="{{{ old('region', $data->region??'') }}}">
+                            <div class="error-message @if ($errors->has('region')) show @endif">{{trans('admin/form.required_text')}}</div>
+                            <div class="text-muted" id="region_help"></div>
+                        </div>
+                    </div>
+                </div>
+
                 <div class="row-100 el-box-select-custom">
                     <div class="input-container">
                         <div class="input-label">

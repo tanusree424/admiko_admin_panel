@@ -142,17 +142,31 @@ Users
                         <div class="input-label">
                             <label for="country">Country<span class="required">*</span></label>
                         </div>
-                        <div class="input-data">
-                            <select class="form-select  js-ak-select2" id="country"
-                                    data-placeholder="{{trans("admin/form.select")}}" data-width="100%"  data-allow-clear="false" data-search-url="{{route("admin.admin_users.country_auto_complete")}}"
-                                    name="country" required>
-                                @if($data->countryToValue)
-                                    <option value="{{ $data->countryToValue->id }}" {{ (old('country') ? old('country') : $data->country ?? '') == $data->countryToValue->id ? 'selected' : '' }}>{{$data->countryToValue->countryname}} </option>
-                                @endif
-                            </select>
-                            <div class="error-message @if ($errors->has('country')) show @endif">{{trans('admin/form.required_text')}}</div>
-                            <div class="text-muted" id="country_help"></div>
-                        </div>
+                       <div class="input-data">
+
+<select class="form-select js-ak-select2" id="country"
+        name="country_id"
+        data-placeholder="{{ trans('admin/form.select') }}"
+        data-width="100%"
+        data-allow-clear="false"
+        required>
+    <option value="" disabled selected hidden>{{ trans('admin/form.select') }}</option>
+
+    @foreach ($countries as $country)
+        <option value="{{ $country->countryid }}"
+            {{ old('country', $data->country_id ?? '') == $country->countryid ? 'selected' : '' }}>
+            {{ $country->countryname }}
+        </option>
+    @endforeach
+</select>
+
+    <div class="error-message @if ($errors->has('country')) show @endif">
+        {{ trans('admin/form.required_text') }}
+    </div>
+
+    <div class="text-muted" id="country_help"></div>
+</div>
+
                     </div>
                 </div>
 

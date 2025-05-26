@@ -13,8 +13,10 @@ use App\Http\Controllers\Controller;
 use App\Models\Admin\Users\UsersExtended as Users;
 use App\Requests\Admin\Users\UsersRequestExtended as UsersRequest;
 use Illuminate\Support\Facades\Gate;
+use Illuminate\Support\Facades\Hash;
+use App\Models\User;
 class UsersController extends Controller
-{   
+{
     public array $menu = ["item" =>"users", "folder" =>"", "subfolder" =>""];
 
     public function index()
@@ -24,7 +26,8 @@ class UsersController extends Controller
         }
 		$menu = $this->menu;
 
-        $users_list_all = Users::startSearch(Request()->query("users_search"))->orderByDesc("id")->get();
+       $users_list_all = User::orderByDesc('id')->get();
+        //dd($users_list_all);
         return view("admin.users.index")->with(compact('menu','users_list_all'))->fragmentIf(Request()->ajax_call==1, "users_fragment");
     }
 
@@ -35,21 +38,36 @@ class UsersController extends Controller
         }
         $menu = $this->menu;
         $data = new Users();
-        
+
         return view("admin.users.form")->with(compact('menu','data'));
     }
 
-    public function store(UsersRequest $request)
-    {
-        if (Gate::none('users_create')) {
-            abort(403);
-        }
-        $requestAll = $request->all();
-        $run = Users::create($requestAll);
-        
 
-        return redirect(route("admin.users.index"))->with("toast_success", trans('admin/misc.success_confirmation_created'));
+
+public function store(UsersRequest $request)
+{
+
+
+    if (Gate::none('users_create')) {
+        abort(403);
     }
+
+
+    $data['name']=$request->name;
+    $data['password'] = Hash::make($request->password);
+    $data['created_by'] = auth()->id() ?? 1; // or fallback to a system/admin user ID
+
+    $user = new User();
+    $user->name = $request->name;
+    $user->email = $request->email;
+    $user->password = Hash::make($request->password);
+    $user->save();
+
+
+    return redirect(route("admin.users.index"))
+           ->with("toast_success", trans('admin/misc.success_confirmation_created'));
+}
+
 
     public function show()
     {
@@ -63,7 +81,7 @@ class UsersController extends Controller
         }
         $menu = $this->menu;
         $data = Users::findOrFail(request()->route()->users_id);;
-        
+
         return view("admin.users.form")->with(compact('menu', 'data'));
     }
 
@@ -100,5 +118,5 @@ class UsersController extends Controller
             return redirect(route("admin.users.index"))->with("toast_success", trans('admin/misc.success_confirmation_deleted'));
         }
     }
-    
+
 }

@@ -9,7 +9,7 @@ Users
 @section('page-back-button')@endsection
 @section('page-content')
 <div class="page-content-width-full">
-    
+
 	@can("users_access")
     @fragment("users_fragment")
 	<div class="content-layout content-width-full users-data-content js-ak-DataTable js-ak-ajax-DataTable-container js-ak-content-layout"
@@ -61,63 +61,42 @@ Users
 						<th>fullName</th>
 						<th>emailAddress</th>
 						<th class=" table-col-hide-sm">password</th>
-						<th class=" table-col-hide-sm">countryId</th>
-						<th class=" table-col-hide-sm">role</th>
-						<th class=" table-col-hide-sm">status</th>
+
 						<th class=" table-col-hide-sm">createdTime</th>
                         @canany(['users_edit','users_delete'])
                         <th class="no-sort manage-th" data-orderable="false">
                             <div class="manage-links">
-                                
+
                             </div>
                         </th>
                         @endcanany
                     </tr>
                 </thead>
-                <tbody class="">
-                @forelse($users_list_all as $data)
-                    <tr>
-						<td>
-							{{$data->userid}}
-						</td>
-						<td>
-							{{$data->fullname}}
-						</td>
-						<td>
-							{{$data->emailaddress}}
-						</td>
-						<td class=" table-col-hide-sm">
-							{{$data->password}}
-						</td>
-						<td class=" table-col-hide-sm">
-							{{$data->countryid}}
-						</td>
-						<td class=" table-col-hide-sm">
-							{{$data->role}}
-						</td>
-						<td class=" table-col-hide-sm">
-							{{$data->status}}
-						</td>
-						<td class=" table-col-hide-sm">
-							{{$data->createdtime}}
-						</td>
-                        @canany(['users_edit','users_delete'])
-                        <td class="manage-td">
-                            <div class="manage-links">
-                                @can('users_edit')
-                                    <a href="{{route("admin.users.edit", $data->id)}}" class="edit-link" draggable="false">@includeIf("admin/admin_layout/partials/misc/icons/edit_icon")</a>
-                            @endcan
-                                @can('users_delete')
-                                <a href="#" data-id="{{$data->id}}" class="delete-link js-ak-delete-link" draggable="false">@includeIf("admin/admin_layout/partials/misc/icons/delete_icon")</a>
-                                @endcan
-                            </div>
-                        </td>
-                        @endcanany
-                    </tr>
-                @empty
-                    
-                @endforelse
-                </tbody>
+               <tbody>
+@forelse($users_list_all as $data)
+    <tr>
+        <td>{{ $data->id }}</td>
+        <td>{{ $data->name }}</td>
+        <td>{{ $data->email }}</td>
+        <td>{{ $data->created_at }}</td>
+        @canany(['users_edit','users_delete'])
+        <td>
+            <div class="manage-links">
+                @can('users_edit')
+                    <a href="{{ route("admin.users.edit", $data->id) }}" class="edit-link">@includeIf("admin/admin_layout/partials/misc/icons/edit_icon")</a>
+                @endcan
+                @can('users_delete')
+                    <a href="#" data-id="{{ $data->id }}" class="delete-link js-ak-delete-link">@includeIf("admin/admin_layout/partials/misc/icons/delete_icon")</a>
+                @endcan
+            </div>
+        </td>
+        @endcanany
+    </tr>
+@empty
+    <tr><td colspan="5">No users found.</td></tr>
+@endforelse
+</tbody>
+
             </table>
             </div>
             <div class="content-footer">
@@ -141,7 +120,7 @@ Users
 	@endfragment
 	@endcan
 
-	
+
 	@includeIf("admin.admin_layout.partials.delete_modal_confirm")
 </div>
 @endsection

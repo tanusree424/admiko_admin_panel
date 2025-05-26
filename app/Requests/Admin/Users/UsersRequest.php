@@ -17,18 +17,13 @@ class UsersRequest extends FormRequest
     {
         $id = $this->route("users_id") ?? null;
 		return [
-            "userid"=>[
-				"string",
-				"unique:users,userid,".$id.",id,deleted_at,NULL",
-				"nullable",
-				"max:255"
-			],
-			"fullname"=>[
+
+			"name"=>[
 				"string",
 				"nullable",
 				"max:255"
 			],
-			"emailaddress"=>[
+			"email"=>[
 				"string",
 				"required",
 				"max:255"
@@ -38,26 +33,7 @@ class UsersRequest extends FormRequest
 				"nullable",
 				"max:255"
 			],
-			"countryid"=>[
-				"string",
-				"nullable",
-				"max:255"
-			],
-			"role"=>[
-				"string",
-				"required",
-				"max:255"
-			],
-			"status"=>[
-				"string",
-				"nullable",
-				"max:255"
-			],
-			"createdtime"=>[
-				"string",
-				"nullable",
-				"max:255"
-			]
+
         ];
     }
     public function attributes()
@@ -73,5 +49,5 @@ class UsersRequest extends FormRequest
 			"createdtime"=>"createdTime"
         ];
     }
-    
+
 }

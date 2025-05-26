@@ -34,10 +34,29 @@ Products
         @includeIf("admin.admin_layout.partials.form.errors")
         <div class="form-content">
             
-                <div class="row-100 el-box-select">
+               
+				 <div class="row-100 el-box-select">
                     <div class="input-container">
                         <div class="input-label">
-                            <label for="category">Category</label>
+                            <label for="subcategory">Category</label>
+                        </div>
+                        <div class="input-data">
+                            <select class="form-select" id="subcategory" name="subcategory" >
+                                <option value="">{{trans("admin/form.select")}}</option>
+								@foreach($data->subcategoryListAll() as $row)
+                                    <option value="{{ $row->id }}" {{ (old('subcategory') ? old('subcategory') : $data->subcategory ?? '') == $row->id ? 'selected' : '' }}>{{ $row->name }} </option>
+                                @endforeach
+                            </select>
+                            <div class="error-message @if ($errors->has('subcategory')) show @endif">{{trans('admin/form.required_text')}}</div>
+                            <div class="text-muted" id="subcategory_help"></div>
+                        </div>
+                    </div>
+                </div>
+
+				 <div class="row-100 el-box-select">
+                    <div class="input-container">
+                        <div class="input-label">
+                            <label for="category">Sub Category</label>
                         </div>
                         <div class="input-data">
                             <select class="form-select" id="category" name="category" >
@@ -51,6 +70,7 @@ Products
                         </div>
                     </div>
                 </div>
+
 
                 <div class="row-100 el-box-select">
                     <div class="input-container">
@@ -95,6 +115,34 @@ Products
                                    value="{{{ old('partcode', $data->partcode??'') }}}">
                             <div class="error-message @if ($errors->has('partcode')) show @endif">{{trans('admin/form.required_text')}}</div>
                             <div class="text-muted" id="partcode_help"></div>
+                        </div>
+                    </div>
+                </div>
+				<div class="row-100 el-box-text">
+                    <div class="input-container">
+                        <div class="input-label">
+                            <label for="eancode">EAN Code<span class="required">*</span></label>
+                        </div>
+                        <div class="input-data">
+                            <input type="text" class="form-input" id="eancode" autocomplete="off"
+                                   name="eancode" required placeholder="eancode"
+                                   value="{{{ old('eancode', $data->eancode??'') }}}">
+                            <div class="error-message @if ($errors->has('eancode')) show @endif">{{trans('admin/form.required_text')}}</div>
+                            <div class="text-muted" id="eancode_help"></div>
+                        </div>
+                    </div>
+                </div>
+				<div class="row-100 el-box-text">
+                    <div class="input-container">
+                        <div class="input-label">
+                            <label for="hsncode">HSN Code<span class="required">*</span></label>
+                        </div>
+                        <div class="input-data">
+                            <input type="text" class="form-input" id="hsncode" autocomplete="off"
+                                   name="hsncode" required placeholder="hsncode"
+                                   value="{{{ old('hsncode', $data->hsncode??'') }}}">
+                            <div class="error-message @if ($errors->has('hsncode')) show @endif">{{trans('admin/form.required_text')}}</div>
+                            <div class="text-muted" id="hsncode_help"></div>
                         </div>
                     </div>
                 </div>

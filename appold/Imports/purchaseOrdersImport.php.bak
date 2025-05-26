@@ -1,0 +1,66 @@
+<?php
+
+use App\Models\Admin\Purchaseorderspreview;
+use Maatwebsite\Excel\Concerns\ToCollection;
+use Maatwebsite\Excel\Concerns\WithHeadingRow;
+use Illuminate\Support\Collection;
+use Maatwebsite\Excel\Concerns\WithValidation;
+use Carbon\Carbon;
+use Auth;
+use DB;
+
+class PurchaseOrdersImport implements ToCollection, WithHeadingRow, WithValidation
+{
+    protected $orderId;
+
+    public function __construct($orderId)
+    {
+        $this->orderId = $orderId;
+    }
+
+    public function collection(Collection $rows)
+    {
+        $insertData = [];
+
+        foreach ($rows as $index => $row) {
+            $rowNum = $index + 2; // +2 for heading and 0-based index
+
+            // Validate manually (moq logic)
+            if ((int)$row['order_qty'] < (int)$row['moq']) {
+                throw new \Exception("Row {$rowNum}: Order QTY ({$row['order_qty']}) must be greater than or equal to MOQ ({$row['moq']}).");
+            }
+
+            $insertData[] = [
+                'distributorid' => Auth::id(),
+                'productid' => $row['part_code'],
+                'ordertime' => Carbon::now(),
+                'orderprice' => $row['order_qty'] * $row['billing_price'],
+                'orderqty' => $row['order_qty'],
+                'updatedtime' => Carbon::now(),
+                'excelid' => 'PO Import',
+                'status' => 'true',
+                'orderid' => $this->orderId,
+                'created_by' => Auth::id(),
+            ];
+        }
+
+        // If all validations pass, insert
+        Purchaseorderspreview::insert($insertData);
+    }
+
+    public function rules(): array
+    {
+        return [
+            '*.part_code' => 'required',
+            '*.order_qty' => 'required|numeric',
+            '*.billing_price' => 'required|numeric',
+            '*.moq' => 'required|numeric',
+        ];
+    }
+
+
+    // public function rules(): array
+    // {
+    //     return ['*.order_qty' => 'gte:*.moq',];
+    // }
+}

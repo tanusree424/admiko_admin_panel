@@ -21,6 +21,12 @@ class CountriesRequest extends FormRequest
 				"required",
 				"max:255"
 			],
+			"region"=>[
+				"string",
+				"required",
+				"max:255"
+			],
+					
 			"status"=>[
 				"nullable",
 				"max:30"
@@ -40,7 +46,8 @@ class CountriesRequest extends FormRequest
     public function attributes()
     {
         return [
-            "countryname"=>"countryName",
+            "region"=>"region",
+			"countryname"=>"countryName",
 			"status"=>"status",
 			"createdby"=>"createdBy",
 			"createdtime"=>"createdTime"

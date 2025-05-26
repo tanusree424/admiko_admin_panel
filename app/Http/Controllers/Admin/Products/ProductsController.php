@@ -25,6 +25,7 @@ class ProductsController extends Controller
 		$menu = $this->menu;
 
         $products_list_all = Products::startSearch(Request()->query("products_search"))->orderByDesc("id")->get();
+		
         return view("admin.products.index")->with(compact('menu','products_list_all'))->fragmentIf(Request()->ajax_call==1, "products_fragment");
     }
 

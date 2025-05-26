@@ -101,6 +101,27 @@
             @endforeach
         </tbody>
     </table>
+    <script>
+    document.addEventListener('DOMContentLoaded', function () {
+        const selectElement = document.getElementById('country');
+        const countryHelp = document.getElementById('country_help');
+
+        function updateCountryHelp() {
+            const selectedOption = selectElement.options[selectElement.selectedIndex];
+            if (selectedOption && selectedOption.value) {
+                countryHelp.textContent = "Selected Country: " + selectedOption.text;
+            } else {
+                countryHelp.textContent = "";
+            }
+        }
+
+        selectElement.addEventListener('change', updateCountryHelp);
+
+        // Initialize the message on page load if already selected
+        updateCountryHelp();
+    });
+</script>
+
 </body>
 
 </html>

@@ -13,6 +13,18 @@ use App\Models\Admin\Products\Products;
 
 class PurchaseordersExtended extends Purchaseorders
 {
+     protected $fillable = [
+        'distributorid',
+        'productid',
+        'ordertime',
+        'orderprice',
+        'orderqty',
+        'updatedtime',
+        'excelid',
+        'status',
+        // Add any other actual database columns here
+    ];
+
     public function distributorInfo()
     {
         return $this->belongsTo('App\Models\Admin\AdminUsers\AdminUsers','distributorid');

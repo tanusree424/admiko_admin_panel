@@ -16,6 +16,8 @@ use Excel;
 use Illuminate\Support\Facades\Auth;
 use Carbon\Carbon;
 use App\Models\Admin\OrderType\OrderType;
+use Illuminate\Support\Facades\Mail;
+use App\Mail\POUploadedMail; // Ensure this Mailable exists and is imported
 use DB;
 
 class UploadSalesReportControllerExtended extends UploadSalesReportController
@@ -86,12 +88,24 @@ class UploadSalesReportControllerExtended extends UploadSalesReportController
         // Step 3: Import again, now with real orderId
         Excel::import(new salesReportImport($orderId), $file);
 
-        return redirect()->back()->with("toast_success", 'Sales Report imported successfully!');
+		 
+
+        // Step 4: Send email after successful import
+        Mail::to('tanubasuchoudhury1997@gmail.com')->send(new POUploadedMail($orderNumber));
+
+        //return redirect()->back()->with("toast_success", 'Sales Report imported and mail sent  successfully!');
+		   return redirect()->route('admin.salesreports.index')
+            ->with("toast_success", "Sales report uploaded and mail sent.");
+
+		
     } catch (\Exception $ex) {
         \Log::error($ex);
         return redirect()->back()->with("toast_error", 'Sales Report import failed! ' . $ex->getMessage());
     }
 }
+
+        
+
 
     public function storeprev(Request $request)
     {

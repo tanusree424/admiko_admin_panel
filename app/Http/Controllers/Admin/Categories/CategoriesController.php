@@ -13,6 +13,8 @@ use App\Http\Controllers\Controller;
 use App\Models\Admin\Categories\CategoriesExtended as Categories;
 use App\Requests\Admin\Categories\CategoriesRequestExtended as CategoriesRequest;
 use Illuminate\Support\Facades\Gate;
+use App\Models\Admin\SubCategories\SubCategories;
+use Illuminate\Http\Request;
 class CategoriesController extends Controller
 {   
     public array $menu = ["item" =>"categories", "folder" =>"", "subfolder" =>""];
@@ -24,7 +26,9 @@ class CategoriesController extends Controller
         }
 		$menu = $this->menu;
 
+
         $categories_list_all = Categories::startSearch(Request()->query("categories_search"))->orderByDesc("id")->get();
+		//dd($categories_list_all );
         return view("admin.categories.index")->with(compact('menu','categories_list_all'))->fragmentIf(Request()->ajax_call==1, "categories_fragment");
     }
 
@@ -34,9 +38,11 @@ class CategoriesController extends Controller
             abort(403);
         }
         $menu = $this->menu;
+		 $parentCategories = Categories::whereNull('catid')->get();  // Get categories without parents
+
         $data = new Categories();
         
-        return view("admin.categories.form")->with(compact('menu','data'));
+        return view("admin.categories.form")->with(compact('menu','data','parentCategories'));
     }
 
     public function store(CategoriesRequest $request)
@@ -45,6 +51,10 @@ class CategoriesController extends Controller
             abort(403);
         }
         $requestAll = $request->all();
+		 // Check if parent category is selected, assign the parent_id for subcategory
+    if ($request->has('catid') && $request->catid) {
+        $requestAll['catid'] = $request->catid;
+    }
         $run = Categories::create($requestAll);
         
 
@@ -62,9 +72,16 @@ class CategoriesController extends Controller
             abort(403);
         }
         $menu = $this->menu;
-        $data = Categories::findOrFail(request()->route()->categories_id);;
+       // $data = Categories::findOrFail(request()->route()->categories_id);;
         
-        return view("admin.categories.form")->with(compact('menu', 'data'));
+       // return view("admin.categories.form")->with(compact('menu', 'data'));
+
+		  $data = Categories::findOrFail(request()->route()->categories_id);
+
+    // Don't include the current category itself as a parent option
+    $parentCategories = Categories::where('id', '!=', $data->id)->whereNull('catid')->get();
+
+    return view("admin.categories.form")->with(compact('menu', 'data', 'parentCategories'));
     }
 
     public function update(CategoriesRequest $request)
@@ -100,5 +117,22 @@ class CategoriesController extends Controller
             return redirect(route("admin.categories.index"))->with("toast_success", trans('admin/misc.success_confirmation_deleted'));
         }
     }
+
+	 public function categories_auto_complete()
+    {
+        if(Request()->has('q')){
+            $data = SubCategories::select("id","name")
+            ->orWhere("name","LIKE","%".Request()->q."%")
+            ->limit(50)->get()->sortBy("id");
+        } else {
+            $data = SubCategories::select("id","name")->limit(50)->get()->sortBy("id");
+        }
+        $return = $data->map(function ($item) {
+            return ['id' => $item->id,'text' => $item->name." "];
+        });
+        return response()->json($return);
+    }
+
+	
     
 }

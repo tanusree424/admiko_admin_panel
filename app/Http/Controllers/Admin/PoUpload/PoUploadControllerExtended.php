@@ -187,7 +187,7 @@ public function storffff(Request $request)
     public function preview(Request $request)
     {
         $data['results'] = DB::table('purchaseorders_preview as pp')
-           ->select('pp.*', 'p.MOQ')
+        ->select('pp.*', 'p.MOQ')
         ->join('products as p', 'p.partcode', '=', 'pp.productid')
         ->paginate(10);
 

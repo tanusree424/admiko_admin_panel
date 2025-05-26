@@ -40,8 +40,9 @@ class AdminUsersController extends Controller
         }
         $menu = $this->menu;
         $data = new AdminUsers();
+        $countries = Countries::all();
         
-        return view("admin.admin_users.form")->with(compact('menu','data'));
+        return view("admin.admin_users.form")->with(compact('menu','data', 'countries'));
     }
 
     public function store(AdminUsersRequest $request)
@@ -50,7 +51,10 @@ class AdminUsersController extends Controller
             abort(403);
         }
         $requestAll = $request->all();
-        $run = AdminUsers::create($requestAll);
+       // return dd($requestAll);
+        $run = AdminUsers::create($requestAll,[
+            "country_id"=>$request->country_id
+        ]);
         
 		$run->rolesMany()->sync(Request()->input("roles", []));
 		$run->multiTenancyMany()->sync(Request()->input("multi_tenancy", []));
@@ -69,9 +73,10 @@ class AdminUsersController extends Controller
             abort(403);
         }
         $menu = $this->menu;
-        $data = AdminUsers::findOrFail(request()->route()->admin_users_id);;
+        $data = AdminUsers::findOrFail(request()->route()->admin_users_id);
+        $countries = Countries::all();
         
-        return view("admin.admin_users.form")->with(compact('menu', 'data'));
+        return view("admin.admin_users.form")->with(compact('menu', 'data', 'countries'));
     }
 
     public function update(AdminUsersRequest $request)

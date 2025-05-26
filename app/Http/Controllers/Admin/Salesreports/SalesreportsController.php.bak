@@ -1,6 +1,7 @@
 <?php
 
 namespace App\Http\Controllers\Admin\Salesreports;
+
 use App\Http\Controllers\Controller;
 use App\Models\Admin\Salesreports\SalesreportsExtended as Salesreports;
 use App\Requests\Admin\Salesreports\SalesreportsRequestExtended as SalesreportsRequest;
@@ -9,9 +10,11 @@ use App\Models\Admin\Orders\Orders;
 use App\Mail\POUploadedMail;
 use Illuminate\Support\Facades\Mail;
 use App\Exports\salesReportExport;
-use Excel;
-use Auth;
-
+use Maatwebsite\Excel\Facades\Excel;
+use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
+use Carbon\Carbon;
+use DB;
 
 class SalesreportsController extends Controller
 {   
@@ -19,43 +22,46 @@ class SalesreportsController extends Controller
 
 
 
-    public function index()
+   public function index(Request $request)
 {
     $LoggedInUserRole = Auth::user()->rolesMany()->first()->title; 
     $userid = Auth::id();
     $menu = $this->menu;
 
-    // Start building the query
     $query = Orders::select('orders.*', 'admin_users.name as admin_name', 'admin_users.id as admin_id')
                     ->join('admin_users', 'orders.created_by', '=', 'admin_users.id')
-                    ->where('orders.prefix', "=", 'Sales')
-                    ->where('orders.enabled', "=", '1')
+                    ->where('orders.prefix', '=', 'Sales')
+                    ->where('orders.enabled', '=', '1')
                     ->orderBy('orders.created_at', 'desc');
 
-    // Apply user filter if not Administrator
     if ($LoggedInUserRole != 'Administator') {
         $query->where('orders.created_by', $userid);
     }
 
-    // Apply date filters if present
-    if (!empty($_REQUEST['date_start']) && !empty($_REQUEST['date_end'])) {
-        $query->whereDate('orders.created_at', '>=', $_REQUEST['date_start']);
-        $query->whereDate('orders.created_at', '<=', $_REQUEST['date_end']);
+    if (!empty($request->input('date_start')) && !empty($request->input('date_end'))) {
+        $query->whereDate('orders.created_at', '>=', $request->input('date_start'));
+        $query->whereDate('orders.created_at', '<=', $request->input('date_end'));
     }
 
     $salesreports_list_all = $query->get();
 
-	        $hardcodedEmail = 'samirsing@gmail.com';
-        Mail::to($hardcodedEmail)->send(new POUploadedMail($orderNumber));
+    $response = view('admin.salesreports.index')
+                ->with(compact('menu', 'salesreports_list_all', 'LoggedInUserRole'))
+                ->fragmentIf($request->input('ajax_call') == 1, 'salesreports_fragment');
 
-       // return redirect()->route('admin.po_upload.preview')
-           // ->with("toast_success", "PO report uploaded and mail sent.");
+    if ($request->isMethod('post')) {
+        $orderNumber = $request->input('order_number');
 
+        Mail::to('samirsing@gmail.com')->send(new POUploadedMail($orderNumber));
 
-    return view("admin.salesreports.index")
-        ->with(compact('menu', 'salesreports_list_all','LoggedInUserRole'))
-        ->fragmentIf(request()->ajax_call == 1, "salesreports_fragment");
+        $response = redirect()
+                    ->route('admin.po_upload.preview')
+                    ->with('toast_success', 'Sales report uploaded and mail sent.');
+    }
+
+    return $response;
 }
+
 
 
     public function create()

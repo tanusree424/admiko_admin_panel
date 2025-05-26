@@ -16,15 +16,18 @@ use Excel;
 use Illuminate\Support\Facades\Auth;
 use Carbon\Carbon;
 use App\Models\Admin\OrderType\OrderType;
+use Illuminate\Support\Facades\Mail;
+use App\Mail\POUploadedMail; // Ensure this Mailable exists and is imported
 use DB;
 
 class UploadSalesReportControllerExtended extends UploadSalesReportController
 {
     public function store(Request $request)
 
+
 {
     try {
-        $userId = Auth::id(); // Retrieves the ID of the currently authenticated user
+        $userId = Auth::id();
         $file = $request->file('sales_report_template_upload');
 
         if (!$file) {
@@ -33,57 +36,20 @@ class UploadSalesReportControllerExtended extends UploadSalesReportController
 
         $fileName = $file->getClientOriginalName();
         $prefix = explode('-', $fileName)[0];
-
-        // Find the order type
         $orderType = OrderType::findByName($prefix);
 
         if (!$orderType) {
             return redirect()->back()->with("toast_error", "Invalid order type.");
         }
 
-        // Append 0 to the order type if needed (based on the assumption that this is a string value)
         $orderTypeFormatted = "0" . $orderType;
-        \Log::error("Formatted Order Type: " . $orderTypeFormatted);
-
         $currentMonthYear = Carbon::now()->format('my');
         $formattedUserId = strlen($userId) === 1 ? '0' . $userId : $userId;
-
-        // Get the current date at 00:00:00
         $currentDate = Carbon::now()->toDateString();
 
-        // Now, import the sales report using Excel and validate
+        // Step 1: Validate the Excel (using a dummy orderId = 0)
         try {
-            $import = new salesReportImport($userId); // Pass the userId here instead of orderId
-            Excel::import($import, $file);
-
-            // After successful import, generate the order number
-            $orderCount = DB::table('orders')
-                ->where('order_type', $orderTypeFormatted)
-                ->whereDate('created_at', $currentDate)
-                ->count();
-
-            // Determine the next sequence number
-            $nextSequence = $orderCount + 1;
-
-            $orderNumber = sprintf("%s/%s/%s/%03d", $formattedUserId, $orderTypeFormatted, $currentMonthYear, $nextSequence);
-
-            // Insert the new order and retrieve its ID
-            $orderId = DB::table('orders')->insertGetId([
-                'order_number' => $orderNumber,
-                'prefix'       => $prefix,
-                'order_type'   => $orderTypeFormatted,
-                'created_by'   => $userId,
-                'file_name'    => $fileName,
-                'created_at'   => Carbon::now(),
-                'updated_at'   => Carbon::now(),
-            ]);
-
-            // Update the order table with `updated_by`
-            DB::table('orders')->where('id', $orderId)->update([
-                'updated_at' => DB::raw('NOW()'),
-                'updated_by' => Auth::id(),
-            ]);
-
+            Excel::import(new salesReportImport(0), $file);
         } catch (\Maatwebsite\Excel\Validators\ValidationException $e) {
             $errors = $e->failures();
             $errorMessages = [];
@@ -92,16 +58,54 @@ class UploadSalesReportControllerExtended extends UploadSalesReportController
                 $errorMessages[] = "Row {$failure->row()}: {$failure->errors()[0]}";
             }
 
-            return redirect()->back()->with("toast_error", 'Sales Report import failed due to validation errors: ' . implode(', ', $errorMessages));
+            return redirect()->back()->with("toast_error", 'Validation failed: ' . implode(', ', $errorMessages));
         }
 
-        return redirect()->back()->with("toast_success", 'Sales Report imported successfully!');
+        // Step 2: Create order only after successful validation
+        $orderCount = DB::table('orders')
+            ->where('order_type', $orderTypeFormatted)
+            ->whereDate('created_at', $currentDate)
+            ->count();
+
+        $nextSequence = $orderCount + 1;
+        $orderNumber = sprintf("%s/%s/%s/%03d", $formattedUserId, $orderTypeFormatted, $currentMonthYear, $nextSequence);
+
+        $orderId = DB::table('orders')->insertGetId([
+            'order_number' => $orderNumber,
+            'prefix'       => $prefix,
+            'order_type'   => $orderTypeFormatted,
+            'created_by'   => $userId,
+            'file_name'    => $fileName,
+            'created_at'   => Carbon::now(),
+            'updated_at'   => Carbon::now(),
+        ]);
+
+        DB::table('orders')->where('id', $orderId)->update([
+            'updated_at' => DB::raw('NOW()'),
+            'updated_by' => $userId,
+        ]);
+
+        // Step 3: Import again, now with real orderId
+        Excel::import(new salesReportImport($orderId), $file);
+
+		 
+
+        // Step 4: Send email after successful import
+        Mail::to('samirsing@gmail.com')->send(new POUploadedMail($orderNumber));
+
+        //return redirect()->back()->with("toast_success", 'Sales Report imported and mail sent  successfully!');
+		   return redirect()->route('admin.salesreports')
+            ->with("toast_success", "Sales report uploaded and mail sent.");
+
+		
     } catch (\Exception $ex) {
-        // Log and handle exception
         \Log::error($ex);
         return redirect()->back()->with("toast_error", 'Sales Report import failed! ' . $ex->getMessage());
     }
 }
+
+        
+
 
     public function storeprev(Request $request)
     {

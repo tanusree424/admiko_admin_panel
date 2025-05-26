@@ -13,6 +13,8 @@ use Illuminate\Database\Eloquent\Model;
 use App\Http\Controllers\Admin\AdminService\Traits\AdminAuditableTrait;
 use App\Http\Controllers\Admin\AdminService\Traits\AdminMultiTenantTrait;
 use Illuminate\Database\Eloquent\SoftDeletes;
+use App\Models\Admin\SubCategories\SubCategories;
+
 
 class Categories extends Model
 {
@@ -27,6 +29,7 @@ class Categories extends Model
 
     protected $fillable = [
 		"catname",
+		"catid",
 		"status",
 		"createdby",
 		"createdtime",
@@ -49,10 +52,20 @@ class Categories extends Model
             $query->orderByDesc("id");
         }
     }
+	
+    
+	public function categoriesToValue()
+    {
+        return $this->belongsTo(SubCategories::class, 'catid');
+    }
+	
 	public function scopeStartSearch($query, $search)
     {
         if ($search) {
             $query->where("id","like","%".$search."%");
         }
     }
+
+	
+	
 }

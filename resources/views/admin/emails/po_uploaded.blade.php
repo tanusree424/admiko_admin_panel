@@ -2,14 +2,14 @@
 <html>
 <head>
     <meta charset="UTF-8">
-    <title>Stock/PO/Sales Report Uploaded</title>
+    <title>Stock/PO/Sales/IS Report Uploaded</title>
 </head>
 <body>
-    <h3>Stock/PO/Sales Report Upload Confirmation</h2>
+    <h3>Stock/PO/Sales/IS Report Upload Confirmation</h2>
 
     <p>Dear Team,</p>
 
-    <p>This is to inform you that a Stock/PO/Sales  report has been successfully uploaded.</p>
+    <p>This is to inform you that a Stock/PO/Sales/IS  report has been successfully uploaded.</p>
 
     <p><strong>Order Number:</strong> {{ $orderNumber }}</p>
 

@@ -14,19 +14,37 @@ class purchaseOrder implements FromCollection, WithHeadings, WithEvents, ShouldA
 {
     public function collection()
     {
-        $purchaseOrders = DB::table('products as p')
-                        ->select('p.partcode','p.partdescription','c.catname','pcm.price','p.MOQ')
+       /* $purchaseOrders = DB::table('products as p')
+                        ->select('p.partcode','p.partdescription','c.catname','sc.name','pcm.price','p.MOQ')
                         ->join('categories as c','p.category','=','c.id')
                         ->join('product_country_mapping as pcm','p.id','=','pcm.products')
+->join('sub_categories as sc','p.subcategory','=','sc.id')
+
                         ->where('p.status','Active')
-                        ->get();
+                        ->get();*/
+$purchaseOrders = DB::table('products as p')
+    ->select(
+        'p.partcode',
+        'p.partdescription',
+        'c.catname',
+        'sc.name as subcategory_name',
+        DB::raw('MIN(pcm.price) as price'),
+        'p.MOQ'
+    )
+    ->join('categories as c', 'p.category', '=', 'c.id')
+    ->join('sub_categories as sc', 'p.subcategory', '=', 'sc.id')
+    ->join('product_country_mapping as pcm', 'p.id', '=', 'pcm.products')
+    ->where('p.status', 'Active')
+  //  ->where('pcm.country_id', $countryId) // Optional filter
+    ->groupBy('p.id', 'p.partcode', 'p.partdescription', 'c.catname', 'sc.name', 'p.MOQ')
+    ->get();
 
         return collect($purchaseOrders);
     }
 
     public function headings(): array
     {
-        return ['Part Code','Part Description','Category','Billing Price','MOQ','Order Qty'];
+        return ['Part Code','Part Description','SubCategory','Category','Billing Price','MOQ','Order Qty'];
     }
 
     public function registerEvents(): array

@@ -23,6 +23,7 @@ return new class extends Migration
             $table->string('language',30)->nullable();
             $table->tinyInteger('show_language')->default('0')->nullable();
             $table->string('theme',30)->nullable();
+            $table->foreignId('country_id')->constrained()->onDelete();
             $table->tinyInteger('show_theme')->default('0')->nullable();
             $table->rememberToken();
             $table->string('reset_token',100)->nullable();

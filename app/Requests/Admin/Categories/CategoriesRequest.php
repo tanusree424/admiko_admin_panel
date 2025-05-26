@@ -16,7 +16,12 @@ class CategoriesRequest extends FormRequest
     public function rules()
     {
         return [
-            "catname"=>[
+            "catid"=>[
+				"string",
+				"required",
+				"max:255"
+			],
+				 "catname"=>[
 				"string",
 				"required",
 				"max:255"
@@ -40,7 +45,8 @@ class CategoriesRequest extends FormRequest
     public function attributes()
     {
         return [
-            "catname"=>"catName",
+            "catid"=>"catid",
+			"catname"=>"catName",
 			"status"=>"status",
 			"createdby"=>"createdBy",
 			"createdtime"=>"createdTime"

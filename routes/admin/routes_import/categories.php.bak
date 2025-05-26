@@ -1,0 +1,19 @@
+<?php
+namespace App\Http\Controllers\Admin;
+use Illuminate\Support\Facades\Route;
+use App\Http\Controllers\Admin\Categories\CategoriesController;
+use App\Controllers\Admin\SubCategories\SubCategoriesController;
+
+/**Categories**/
+/**Categories**/
+Route::delete("categories/destroy", [Categories\CategoriesControllerExtended::class,"destroy"])->name("categories.delete");
+//Route::get("Subcategories/subcategories_auto_complete", //[Subcategories\SubCategoriesControllerExtended::class,"subcategories_auto_complete"])->name("Subcategories.subcategories_auto_complete");
+//Route::get("categories/subcategories_auto_complete", [Categories\CategoriesController::class,"subcategories_auto_complete"])->name("categories.subcategories_auto_complete");
+
+//Route::get("categories/categories-auto-complete", [Categories\CategoriesControllerExtended::class,"categories_auto_complete"])->name("categories.categories_auto_complete");
+
+Route::get("categories/categories_auto_complete", [categories\CategoriesControllerExtended::class,"categories_auto_complete"])->name("categories.categories_auto_complete");
+
+
+Route::resource("categories", Categories\CategoriesControllerExtended::class)->parameters(["categories" =>"categories_id"])->names("categories")->except(["show"])->whereNumber("categories_id");
+

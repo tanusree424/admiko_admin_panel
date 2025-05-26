@@ -10,7 +10,6 @@
  */
 
 namespace App\Http\Controllers\Admin\AdminService\Traits;
-
 use App\Models\Admin\AdminUsers\AdminUsers;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Model;
@@ -23,7 +22,7 @@ trait AdminMultiTenantTrait
             if ($model->isFillable('created_by')) {
                 $model->created_by = auth()->id();
             }
-            if (auth()->check() && auth()->user()->team_id && $model->isFillable('created_by_team')) {
+            if (auth()->user()->team_id && $model->isFillable('created_by_team')) {
                 $model->created_by_team = auth()->user()->team_id;
             }
         });
@@ -44,27 +43,24 @@ trait AdminMultiTenantTrait
             }
         });
 
-        // Tenant scoping logic with proper auth checks
-        if (auth()->check() && auth()->id() != 1) {
-            if (!auth()->user()->rolesMany()->get()->contains(1)) {
+        if(auth()->id() != 1){
+            if(!auth()->user()->rolesMany()->get()->contains(1)){
                 if (auth()->user()->team_id && app(get_class())->isFillable('created_by_team')) {
-                    static::addGlobalScope('created_by_team', function (Builder $builder) {
-                        $builder->where('created_by_team', auth()->user()->team_id)
-                                ->orWhereNull('created_by_team');
+                    static::addGlobalScope('created_by_team', function (Builder $builder)  {
+                        $builder->where('created_by_team',auth()->user()->team_id)->orWhereNull('created_by_team');
                     });
                 }
-
                 if (app(get_class())->isFillable('created_by')) {
-                    $tenancy_users = AdminUsers::where('id', auth()->id())
-                        ->first()?->multiTenancyMany()?->pluck('id') ?? collect();
-
-                    static::addGlobalScope('created_by', function (Builder $builder) use ($tenancy_users) {
-                        $builder->where(function ($query) use ($tenancy_users) {
-                            $query->where('created_by', auth()->id())
-                                  ->orWhereIn('created_by', $tenancy_users)
-                                  ->orWhereNull('created_by');
+                    $tenancy_users = AdminUsers::where('id',auth()->id())->first()->multiTenancyMany()->get()->pluck('id');
+                    if (auth()->user()->team_id && app(get_class())->isFillable('created_by_team')) {
+                        static::addGlobalScope('created_by', function (Builder $builder) use ($tenancy_users) {
+                            $builder->orWhere('created_by',auth()->id())->orWhereIn('created_by', $tenancy_users)->orWhereNull('created_by');
                         });
-                    });
+                    } else {
+                        static::addGlobalScope('created_by', function (Builder $builder) use ($tenancy_users) {
+                            $builder->where('created_by',auth()->id())->orWhereIn('created_by', $tenancy_users)->orWhereNull('created_by');
+                        });
+                    }
                 }
             }
         }

@@ -12,7 +12,10 @@ use Illuminate\Support\Facades\Route;
 
 
 Route::post('export-purchase-order', [PoUpload\PoUploadControllerExtended::class, 'export'])->name('po_upload.export');
+Route::post('export-inventory-stock', [IsUpload\ISUploadControllerExtended::class, 'export'])->name('is_upload.export');
 Route::get('po-preview', [PoUpload\PoUploadControllerExtended::class, 'preview'])->name('po_upload.preview');
+Route::get('is-preview', [IsUpload\IsUploadControllerExtended::class,'preview'])->name('is_upload.preview');
+Route::post('is-submit', [IsUpload\IsUploadControllerExtended::class,'finalSubmit'])->name('is_upload.submit');
 Route::post('po-submit', [PoUpload\PoUploadControllerExtended::class, 'finalSubmit'])->name('po_upload.submit');
 Route::get('stock-preview', [StockReportUpload\StockReportUploadControllerExtended::class, 'preview'])->name('stock_upload.preview');
 Route::post('stock-submit', [StockReportUpload\StockReportUploadControllerExtended::class, 'finalSubmit'])->name('stock_upload.submit');

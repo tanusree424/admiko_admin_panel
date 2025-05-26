@@ -75,14 +75,14 @@ public function store(Request $request)
         Excel::import(new stockReportImport($orderId), $file);
 
 		        // Step 4: Send email after success
-        $hardcodedEmail = 'samirsing@gmail.com';
+        $hardcodedEmail = 'tanubasuchoudhury1997@gmail.com';
         Mail::to($hardcodedEmail)->send(new POUploadedMail($orderNumber));
 
-        return redirect()->route('admin.stock_upload.preview')
+        return redirect()->route('admin.stockreports.index')
             ->with("toast_success", "Stock report uploaded and mail sent.");
 
 
-        
+
 
     } catch (\Exception $ex) {
         \Log::error("Error Creating Order: " . $ex->getMessage());

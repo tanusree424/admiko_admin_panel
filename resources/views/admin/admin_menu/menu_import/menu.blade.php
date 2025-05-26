@@ -117,51 +117,11 @@
 					<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 384 512"><path d="M64 464c-8.8 0-16-7.2-16-16V64c0-8.8 7.2-16 16-16H224v80c0 17.7 14.3 32 32 32h80V448c0 8.8-7.2 16-16 16H64zM64 0C28.7 0 0 28.7 0 64V448c0 35.3 28.7 64 64 64H320c35.3 0 64-28.7 64-64V154.5c0-17-6.7-33.3-18.7-45.3L274.7 18.7C262.7 6.7 246.5 0 229.5 0H64zm56 256c-13.3 0-24 10.7-24 24s10.7 24 24 24H264c13.3 0 24-10.7 24-24s-10.7-24-24-24H120zm0 96c-13.3 0-24 10.7-24 24s10.7 24 24 24H264c13.3 0 24-10.7 24-24s-10.7-24-24-24H120z"/></svg>
 				</div>
 			</div>
-			<div class="title">Sub Categories</div>
+			<div class="title"> Categories</div>
 		</a>
 	</div>
 @endcanany --}}
-
-	<div class="dropdown js-ak-dropdown{{ $menu['folder'] == "admin_categoires" ? " open" : "" }}">
-		<div class="dropdown-item js-ak-dropdown-item">
-			<div class="item">
-				<a draggable="false" class="link" href="">
-					<div class="icon">
-						<div class="font-awesome-icon">
-							<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 640 512"><path d="M224 0a128 128 0 1 1 0 256A128 128 0 1 1 224 0zM178.3 304h91.4c11.8 0 23.4 1.2 34.5 3.3c-2.1 18.5 7.4 35.6 21.8 44.8c-16.6 10.6-26.7 31.6-20 53.3c4 12.9 9.4 25.5 16.4 37.6s15.2 23.1 24.4 33c15.7 16.9 39.6 18.4 57.2 8.7v.9c0 9.2 2.7 18.5 7.9 26.3H29.7C13.3 512 0 498.7 0 482.3C0 383.8 79.8 304 178.3 304zM436 218.2c0-7 4.5-13.3 11.3-14.8c10.5-2.4 21.5-3.7 32.7-3.7s22.2 1.3 32.7 3.7c6.8 1.5 11.3 7.8 11.3 14.8v30.6c7.9 3.4 15.4 7.7 22.3 12.8l24.9-14.3c6.1-3.5 13.7-2.7 18.5 2.4c7.6 8.1 14.3 17.2 20.1 27.2s10.3 20.4 13.5 31c2.1 6.7-1.1 13.7-7.2 17.2l-25 14.4c.4 4 .7 8.1 .7 12.3s-.2 8.2-.7 12.3l25 14.4c6.1 3.5 9.2 10.5 7.2 17.2c-3.3 10.6-7.8 21-13.5 31s-12.5 19.1-20.1 27.2c-4.8 5.1-12.5 5.9-18.5 2.4l-24.9-14.3c-6.9 5.1-14.3 9.4-22.3 12.8l0 30.6c0 7-4.5 13.3-11.3 14.8c-10.5 2.4-21.5 3.7-32.7 3.7s-22.2-1.3-32.7-3.7c-6.8-1.5-11.3-7.8-11.3-14.8V454.8c-8-3.4-15.6-7.7-22.5-12.9l-24.7 14.3c-6.1 3.5-13.7 2.7-18.5-2.4c-7.6-8.1-14.3-17.2-20.1-27.2s-10.3-20.4-13.5-31c-2.1-6.7 1.1-13.7 7.2-17.2l24.8-14.3c-.4-4.1-.7-8.2-.7-12.4s.2-8.3 .7-12.4L343.8 325c-6.1-3.5-9.2-10.5-7.2-17.2c3.3-10.6 7.7-21 13.5-31s12.5-19.1 20.1-27.2c4.8-5.1 12.4-5.9 18.5-2.4l24.8 14.3c6.9-5.1 14.5-9.4 22.5-12.9V218.2zm92.1 133.5a48.1 48.1 0 1 0 -96.1 0 48.1 48.1 0 1 0 96.1 0z"/></svg>
-						</div>
-					</div>
-					<div class="title">Categories</div>
-					<div class="icon action-icon">
-						<div class="font-awesome-icon">
-							<svg focusable="false" data-prefix="fas" data-icon="angle-right" class="svg-inline--fa fa-angle-right" role="img" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 256 512">
-								<path fill="currentColor" d="M64 448c-8.188 0-16.38-3.125-22.62-9.375c-12.5-12.5-12.5-32.75 0-45.25L178.8 256L41.38 118.6c-12.5-12.5-12.5-32.75 0-45.25s32.75-12.5 45.25 0l160 160c12.5 12.5 12.5 32.75 0 45.25l-160 160C80.38 444.9 72.19 448 64 448z"></path>
-							</svg>
-						</div>
-					</div>
-				</a>
-			</div>
-		</div>
-		<div class="dropdown-container" {!! $menu['folder'] == "categories" ? ' style="display:block"' : '' !!}>
-			<div class="dropdown-menu-list">
-			@canany(['admin_categories_access'])
-				<div class="item{{ $menu['item'] === "admin_users" ? " active" : "" }}">
-					<a draggable="false" class="link" href="{{route("admin.categories.index")}}">
-						<div class="icon">
-							<div class="font-awesome-icon">
-								<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 640 512"><path d="M144 0a80 80 0 1 1 0 160A80 80 0 1 1 144 0zM512 0a80 80 0 1 1 0 160A80 80 0 1 1 512 0zM0 298.7C0 239.8 47.8 192 106.7 192h42.7c15.9 0 31 3.5 44.6 9.7c-1.3 7.2-1.9 14.7-1.9 22.3c0 38.2 16.8 72.5 43.3 96c-.2 0-.4 0-.7 0H21.3C9.6 320 0 310.4 0 298.7zM405.3 320c-.2 0-.4 0-.7 0c26.6-23.5 43.3-57.8 43.3-96c0-7.6-.7-15-1.9-22.3c13.6-6.3 28.7-9.7 44.6-9.7h42.7C592.2 192 640 239.8 640 298.7c0 11.8-9.6 21.3-21.3 21.3H405.3zM224 224a96 96 0 1 1 192 0 96 96 0 1 1 -192 0zM128 485.3C128 411.7 187.7 352 261.3 352H378.7C452.3 352 512 411.7 512 485.3c0 14.7-11.9 26.7-26.7 26.7H154.7c-14.7 0-26.7-11.9-26.7-26.7z"/></svg>
-							</div>
-						</div>
-						<div class="title">Categories</div>
-					</a>
-				</div>
-			@endcanany
-			
-			
-			
-			</div>
-		</div>
-		<div class="dropdown-container" {!! $menu['folder'] == "sub_categories" ? ' style="display:block"' : '' !!}>
+<div class="dropdown-container" {!! $menu['folder'] == "sub_categories" ? ' style="display:block"' : '' !!}>
 			<div class="dropdown-menu-list">
 			@canany(['admin_users_access'])
 				<div class="item{{ $menu['item'] === "admin_users" ? " active" : "" }}">
@@ -171,19 +131,28 @@
 								<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 640 512"><path d="M144 0a80 80 0 1 1 0 160A80 80 0 1 1 144 0zM512 0a80 80 0 1 1 0 160A80 80 0 1 1 512 0zM0 298.7C0 239.8 47.8 192 106.7 192h42.7c15.9 0 31 3.5 44.6 9.7c-1.3 7.2-1.9 14.7-1.9 22.3c0 38.2 16.8 72.5 43.3 96c-.2 0-.4 0-.7 0H21.3C9.6 320 0 310.4 0 298.7zM405.3 320c-.2 0-.4 0-.7 0c26.6-23.5 43.3-57.8 43.3-96c0-7.6-.7-15-1.9-22.3c13.6-6.3 28.7-9.7 44.6-9.7h42.7C592.2 192 640 239.8 640 298.7c0 11.8-9.6 21.3-21.3 21.3H405.3zM224 224a96 96 0 1 1 192 0 96 96 0 1 1 -192 0zM128 485.3C128 411.7 187.7 352 261.3 352H378.7C452.3 352 512 411.7 512 485.3c0 14.7-11.9 26.7-26.7 26.7H154.7c-14.7 0-26.7-11.9-26.7-26.7z"/></svg>
 							</div>
 						</div>
-						<div class="title">Subcategories</div>
+						<div class="title">categories</div>
 					</a>
 				</div>
 			@endcanany
-			
-			
-			
+
+
+
 			</div>
 		</div>
+
+@canany(['categories_access'])
+	<div class="item{{ $menu['item'] === "categories" ? " active" : "" }}">
+		<a draggable="false" class="link" href="{{route("admin.categories.index")}}">
+			<div class="icon">
+				<div class="font-awesome-icon">
+					<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 384 512"><path d="M64 464c-8.8 0-16-7.2-16-16V64c0-8.8 7.2-16 16-16H224v80c0 17.7 14.3 32 32 32h80V448c0 8.8-7.2 16-16 16H64zM64 0C28.7 0 0 28.7 0 64V448c0 35.3 28.7 64 64 64H320c35.3 0 64-28.7 64-64V154.5c0-17-6.7-33.3-18.7-45.3L274.7 18.7C262.7 6.7 246.5 0 229.5 0H64zm56 256c-13.3 0-24 10.7-24 24s10.7 24 24 24H264c13.3 0 24-10.7 24-24s-10.7-24-24-24H120zm0 96c-13.3 0-24 10.7-24 24s10.7 24 24 24H264c13.3 0 24-10.7 24-24s-10.7-24-24-24H120z"/></svg>
+				</div>
+			</div>
+			<div class="title">Subcategories</div>
+		</a>
 	</div>
-
-
-
+@endcanany
 @canany(['products_access'])
 	<div class="item{{ $menu['item'] === "products" ? " active" : "" }}">
 		<a draggable="false" class="link" href="{{route("admin.products.index")}}">
@@ -253,6 +222,18 @@
 				</div>
 			</div>
 			<div class="title">PurchaseOrders</div>
+		</a>
+	</div>
+@endcanany
+@canany(['inventorystock_access'])
+	<div class="item{{ $menu['item'] === "inventorystocks" ? " active" : "" }}">
+		<a draggable="false" class="link" href="{{route("admin.inventorystock.index")}}">
+			<div class="icon">
+				<div class="font-awesome-icon">
+					<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 384 512"><path d="M64 464c-8.8 0-16-7.2-16-16V64c0-8.8 7.2-16 16-16H224v80c0 17.7 14.3 32 32 32h80V448c0 8.8-7.2 16-16 16H64zM64 0C28.7 0 0 28.7 0 64V448c0 35.3 28.7 64 64 64H320c35.3 0 64-28.7 64-64V154.5c0-17-6.7-33.3-18.7-45.3L274.7 18.7C262.7 6.7 246.5 0 229.5 0H64zm56 256c-13.3 0-24 10.7-24 24s10.7 24 24 24H264c13.3 0 24-10.7 24-24s-10.7-24-24-24H120zm0 96c-13.3 0-24 10.7-24 24s10.7 24 24 24H264c13.3 0 24-10.7 24-24s-10.7-24-24-24H120z"/></svg>
+				</div>
+			</div>
+			<div class="title">Inventory Stock</div>
 		</a>
 	</div>
 @endcanany
@@ -348,6 +329,20 @@
 							</div>
 						</div>
 						<div class="title">PO Upload</div>
+					</a>
+				</div>
+			@endcanany
+            <div class="dropdown-container" {!! $menu['folder'] == "excelreport_uploads" ? ' style="display:block"' : '' !!}>
+			<div class="dropdown-menu-list">
+			@canany(['is_upload_access'])
+				<div class="item{{ $menu['item'] === "is_upload" ? " active" : "" }}">
+					<a draggable="false" class="link" href="{{route("admin.is_upload.index")}}">
+						<div class="icon">
+							<div class="font-awesome-icon">
+								<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 384 512"><path d="M64 0C28.7 0 0 28.7 0 64V448c0 35.3 28.7 64 64 64H320c35.3 0 64-28.7 64-64V160H256c-17.7 0-32-14.3-32-32V0H64zM256 0V128H384L256 0zM155.7 250.2L192 302.1l36.3-51.9c7.6-10.9 22.6-13.5 33.4-5.9s13.5 22.6 5.9 33.4L221.3 344l46.4 66.2c7.6 10.9 5 25.8-5.9 33.4s-25.8 5-33.4-5.9L192 385.8l-36.3 51.9c-7.6 10.9-22.6 13.5-33.4 5.9s-13.5-22.6-5.9-33.4L162.7 344l-46.4-66.2c-7.6-10.9-5-25.8 5.9-33.4s25.8-5 33.4 5.9z"/></svg>
+							</div>
+						</div>
+						<div class="title">IS Upload</div>
 					</a>
 				</div>
 			@endcanany

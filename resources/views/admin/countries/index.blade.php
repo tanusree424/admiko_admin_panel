@@ -59,6 +59,7 @@ Countries
                     <tr data-sort-method='thead'>
 						<th class="table-id" data-sort-method="number">ID</th>
 						<th>countryName</th>
+						<th>region</th>
 						<th>createdBy</th>
 						<th class=" table-col-hide-sm">createdTime</th>
                         @canany(['countries_edit','countries_delete'])
@@ -78,6 +79,9 @@ Countries
 						</td>
 						<td>
 							{{$data->countryname}}
+						</td>
+						<td>
+							{{$data->region}}
 						</td>
 						<td>
 							{{$data->createdby}}

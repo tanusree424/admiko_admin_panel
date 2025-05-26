@@ -15,6 +15,7 @@ use App\Http\Controllers\Admin\AdminService\Traits\AdminMultiTenantTrait;
 use Illuminate\Database\Eloquent\SoftDeletes;
 use App\Models\Admin\Brands\Brands;
 use App\Models\Admin\Categories\Categories;
+use App\Models\Admin\SubCategories\SubCategories;
 
 class Products extends Model
 {
@@ -28,10 +29,14 @@ class Products extends Model
     ];
 
     protected $fillable = [
+		
 		"category",
+			 'subcategory',
 		"brand",
 		"productname",
 		"partcode",
+		"eancode",
+		"hsncode",		
 		"MOQ",
 		"partdescription",
 		"excelid",
@@ -49,9 +54,26 @@ class Products extends Model
     {
         return Categories::all()->sortBy("catname");
     }
+
+public function subcategoryListAll()
+    {
+        return SubCategories::all()->sortBy("name");
+    }
+
+	
 	public function categoryToValue()
     {
         return $this->belongsTo(Categories::class, 'category');
+    }
+
+//category
+	public function scategoriesToValue()
+    {
+     // $product->subCategory->name;
+		
+		return $this->belongsTo(SubCategories::class, 'subcategory');
+
+		
     }
 	public function brandListAll()
     {

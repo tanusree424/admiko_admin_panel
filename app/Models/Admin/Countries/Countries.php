@@ -27,6 +27,7 @@ class Countries extends Model
 
     protected $fillable = [
 		"countryname",
+		"region",		
 		"status",
 		"createdby",
 		"createdtime",

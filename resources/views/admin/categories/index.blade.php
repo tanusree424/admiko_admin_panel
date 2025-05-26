@@ -1,9 +1,9 @@
 @extends("admin.admin_layout.default")
 @section('breadcrumbs')
-<li class="breadcrumb-item active">Categories</li>
+<li class="breadcrumb-item active">Sub Category</li>
 @endsection
 @section('page-title')
- Categories
+Sub Category
 @endsection
 @section('page-info')@endsection
 @section('page-back-button')@endsection
@@ -58,6 +58,7 @@
                 <thead>
                     <tr data-sort-method='thead'>
 						<th class="table-id" data-sort-method="number">ID</th>
+						<th>Name</th>
 						<th>catName</th>
 						<th>createdBy</th>
 						<th class=" table-col-hide-sm">createdTime</th>
@@ -71,14 +72,25 @@
                     </tr>
                 </thead>
                 <tbody class="">
-                @forelse($categories_list_all as $data)
-                    <tr>
-						<td>
-							{{$data->id}}
-						</td>
-						<td>
-							{{$data->catname}}
-						</td>
+						@forelse($categories_list_all as $data)
+							<tr>
+								<td>
+									{{$data->id}}
+								</td>
+								<td>
+									{{$data->catname}}
+								</td>
+								
+								<td> 
+										@if($data->categoriesToValue->name??false){{($data->categoriesToValue->name)}} @endif
+						
+				
+
+							
+
+								</td> 
+
+
 						<td>
 							{{$data->createdby}}
 						</td>
