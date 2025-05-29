@@ -73,7 +73,7 @@ $("#adminUserAddShippingAddressModalSave").on('click',function(){
         },
         success: function(response) {
             console.log(response);
-            
+
             $(".adminUserAddShippingAddressModal").fadeOut();
             location.reload();
         },
@@ -208,7 +208,7 @@ $("#stockreport_table").on('click','.view-stock-report-summery',function(){
         dataType: "json",
         success: function(data) {
             console.log(data);
-    
+
             let tableData = '';
             // Loop through the data and create table rows
             let count = 1;
@@ -225,8 +225,8 @@ $("#stockreport_table").on('click','.view-stock-report-summery',function(){
                         <td>${data.createdtime}</td>
                         </tr>`;
             })
-    
-    
+
+
             $('.stockReportViewDetails .custom-modal-body tbody').html(tableData);
             $('.stockReportViewDetails').fadeIn(); // Show modal
         },
@@ -316,7 +316,7 @@ $("#salesreport_table").on('click','.delete-sales-order',function(){
     });
 })
 */
-	
+
 
 $("#salesreport_table").on('click', '.delete-sales-order', function() {
     let order_id = $(this).data('id');
@@ -466,7 +466,7 @@ $("#stockreport_table").on('click', '.confirm-order-btn', function() {
         console.log("stock confirmation was canceled.");
     }
 });
-	
+
 /*
 
 $("#purchaseorders_table").on('click','.confirm-order-btn',function(){
@@ -474,7 +474,7 @@ $("#purchaseorders_table").on('click','.confirm-order-btn',function(){
     let url = $(this).data('url');
     let userId = $(this).data('userid');
     let urlPost = url + `/confirm/${order_id}`;
-	
+
     $.ajax({
         url: urlPost,
         type: "POST",
@@ -521,7 +521,12 @@ $("#purchaseorders_table").on('click', '.confirm-order-btn', function() {
         console.log("Order confirmation was canceled.");
     }
 });
+// Inventory Stock
+$("#inventorystocks_table").on('click', '.view-stock-detail', function (e) {
+    e.preventDefault();
+    console.log('Inventory stock detail clicked'); // ✅ Confirm this appears in console
 
 
 
+});
 });

@@ -44,7 +44,7 @@ $inventorystock = DB::table('products as p')
 
     public function headings(): array
     {
-        return ['Part Code','Part Description','SubCategory','Category','Billing Price','MOQ','Inventory stock'];
+        return ['Part Code','Part Description','SubCategory','Category','Billing Price','MOQ','Inventory_stock'];
     }
 
     public function registerEvents(): array

@@ -53,13 +53,13 @@ public static function findAllinventorystocksById($orderId)
             SELECT
                 inventory_stocks.orderid,
                 inventory_stocks.id AS id,
-                inventory_stocks.poid,
+
                 inventory_stocks.distributorid,
                 admin_users.name AS distributor_name,
                 inventory_stocks.productid,
                 inventory_stocks.ordertime,
                 inventory_stocks.orderprice,
-                inventory_stocks.orderqty,
+                inventory_stocks.inventory_stock,
                 inventory_stocks.updatedtime,
                 inventory_stocks.excelid,
                 inventory_stocks.status,
@@ -69,7 +69,7 @@ public static function findAllinventorystocksById($orderId)
                 inventory_stocks.created_by,
                 inventory_stocks.updated_by,
                 inventory_stocks.deleted_by,
-                inventory_stocks.created_by_team,
+
                 products.id AS product_id,
                 products.productname,
                 products.partcode,
@@ -82,18 +82,19 @@ public static function findAllinventorystocksById($orderId)
                 countries.currency AS currency,
                 ROW_NUMBER() OVER (PARTITION BY inventory_stocks.id ORDER BY inventory_stocks.ordertime) AS rn
             FROM inventory_stocks
-            JOIN products ON inventory_stocks.productid = products.partcode
+            JOIN products ON CONVERT(inventory_stocks.productid USING utf8mb4) COLLATE utf8mb4_unicode_ci = products.partcode
             JOIN brands ON products.brand = brands.id
             JOIN product_country_mapping ON products.id = product_country_mapping.products
             JOIN countries ON product_country_mapping.country = countries.id
             JOIN admin_users  ON admin_users.id = inventory_stocks.distributorid
-            join categories on categories.id = products.category
-            WHERE  inventory_stocks.orderid = ' . intval($orderId) . ' and inventory_stocks.status = "true"
+            JOIN categories ON categories.id = products.category
+            WHERE inventory_stocks.orderid = ' . intval($orderId) . ' AND inventory_stocks.status = "true"
         ) AS ranked
     '))
     ->where('rn', 1)
     ->get();
 }
+
 
 
 

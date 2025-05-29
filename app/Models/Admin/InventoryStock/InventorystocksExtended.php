@@ -22,6 +22,7 @@ class inventorystocksExtended extends inventorystocks
         'updatedtime',
         'excelid',
         'status',
+        'inventory_stock'
         // Add any other actual database columns here
     ];
 

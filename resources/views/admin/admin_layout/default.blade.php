@@ -5,6 +5,7 @@
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <link rel="icon" type="image/x-icon" href="{{ asset('assets/admiko/css/images/favicon.png') }}">
+
     <meta name="csrf-token" content="{{ csrf_token() }}"/>
     @includeIf('admin.admin_layout.scripts.header.scripts')
 </head>
@@ -48,5 +49,6 @@
 </div>
 @includeIf('admin.admin_layout.scripts.footer.scripts')
 @includeIf("admin.admin_layout.partials.misc.toast")
+ <script src="{{asset('assets/admiko/js/custom/customScript.js')}}"></script>
 </body>
 </html>

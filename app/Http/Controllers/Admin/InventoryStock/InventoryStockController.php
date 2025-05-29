@@ -27,7 +27,7 @@ class InventoryStockController extends Controller
 
         $menu = $this->menu;
 
-		$inventorystock_list_all = InventoryStock::with('products')
+		$inventorystocks_list_all = InventoryStock::with('products')
             ->startSearch($request->query("inventorystock_search"))
             ->orderByDesc("id")
             ->get();
@@ -116,14 +116,16 @@ return view("admin.inventorystocks.index", compact('menu', 'inventorystocks_list
             ->with("toast_success", trans('admin/misc.success_confirmation_deleted'));
     }
 
-    public function showSummary($orderId)
-    {
-        $data = InventoryStock::findAllinventorystocksById($orderId);
-        return response()->json([
-            'success' => true,
-            'data' => $data
-        ]);
-    }
+ public function showSummary($orderId)
+        {
+            $inventorystocks_list_all = InventoryStock::findAllinventorystocksById($orderId);
+            return response()->json([
+                'success' => true,
+                'data' => $inventorystocks_list_all
+            ], 200);
+        }
+
+
 
     public function exportExcel($orderId)
     {
@@ -134,6 +136,7 @@ return view("admin.inventorystocks.index", compact('menu', 'inventorystocks_list
         if (!$inventorystock) {
             return redirect()->back()->with("toast_error", trans('admin/misc.error_no_data_found'));
         }
+       // var_dump($inventorystock);
 
         return Excel::download(new InventoryStockExport($inventorystock), 'inventorystock-' . $sanitizedOrderNumber . '.xlsx');
     }
@@ -149,7 +152,7 @@ return view("admin.inventorystocks.index", compact('menu', 'inventorystocks_list
             return redirect()->back()->with("toast_error", trans('admin/misc.error_no_data_found'));
         }
 
-        $pdf = Pdf::loadView('admin.inventorystock.pdf', compact('inventorystock', 'orderDetails', 'address', 'vendorAddress'));
+        $pdf = Pdf::loadView('admin.inventorystocks.pdf', compact('inventorystock', 'orderDetails', 'address', 'vendorAddress'));
         return $pdf->download('inventorystock.pdf');
     }
 

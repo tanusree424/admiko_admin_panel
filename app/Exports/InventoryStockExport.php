@@ -8,7 +8,7 @@ use Maatwebsite\Excel\Events\AfterSheet;
 use Maatwebsite\Excel\Concerns\ShouldAutoSize;
 use Illuminate\Support\Collection;
 
-class PurchaseOrderExport implements FromCollection, WithHeadings, WithEvents, ShouldAutoSize
+class InventorystockExport implements FromCollection, WithHeadings, WithEvents, ShouldAutoSize
 {
     protected $inventorystocks;
 
@@ -19,6 +19,7 @@ class PurchaseOrderExport implements FromCollection, WithHeadings, WithEvents, S
 
     public function collection()
     {
+        // dd($this->inventorystocks->first()); // ← check this structure
         return $this->inventorystocks->map(function ($stock) {
             return [
                 $stock->id,
@@ -31,17 +32,19 @@ class PurchaseOrderExport implements FromCollection, WithHeadings, WithEvents, S
                 $stock->ordertime,
                 $stock->price,
                 $stock->moq,
+
                 // $stock->orderqty,
  		        $stock->orderprice,
                 $stock->updatedtime,
-                $stock->excelid
+                $stock->excelid,
+                $stock->inventory_stock
             ];
         });
     }
 
     public function headings(): array
     {
-        return ['ID', 'Distributor', 'Product ID','Product Name', 'Brand Name', 'Category', 'Part Description' ,'Order Time',  'Unit Price' , 'MOQ',  'Order Price', 'Updated Time', 'Excel ID','Inventory Stock'];
+        return ['ID', 'Distributor', 'Product ID','Product Name', 'Brand Name', 'Category', 'Part Description' ,'Order Time',  'Unit Price' , 'MOQ',  'Order Price', 'Updated Time', 'Excel ID','Inventory_Stock'];
     }
 
     public function registerEvents(): array

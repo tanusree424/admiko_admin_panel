@@ -224,6 +224,7 @@ public function storffff(Request $request)
                     'status' => 'true',
                     'orderid' => $row->orderid,
                     'created_by' => $row->created_by,
+                    'inventory_stock'=>$row->inventory_stock
                 ]);
                 //update order table set updatedtime = now() where id = $row->orderid
                 DB::table('orders')->where('id', $row->orderid)->update([

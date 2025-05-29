@@ -22,6 +22,7 @@ class Inventorystockpreview extends Model
 		"orderqty",
 		"updatedtime",
 		"excelid",
+        "inventory_stock",
 		"status",
 		"created_by",
 		"updated_by",

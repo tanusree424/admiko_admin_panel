@@ -84,3 +84,4 @@ class InventorystocksImport implements ToModel, WithHeadingRow ,WithValidation
     //     return ['*.order_qty' => 'gte:*.moq',];
     // }
 }
+
