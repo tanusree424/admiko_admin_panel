@@ -45,7 +45,7 @@ public function index(Request $request)
 
     return view("admin.inventorystocks.index")
         ->with(compact('menu', 'inventorystocks_list_all', 'LoggedInUserRole', 'userid'))
-        ->fragmentIf($request->ajax_call == 1, "inventorystockss_fragment");
+        ->fragmentIf($request->ajax_call == 1, "inventorystocks_fragment");
 }
 
 
@@ -69,7 +69,7 @@ public function index(Request $request)
             $inventorystocks_list_all = Orders::findOrderByUserId($userid);
         }
 
-        return view("admin.inventorystocks.index")->with(compact('menu','inventorystockss_list_all'))->fragmentIf(Request()->ajax_call==1, "inventorystockss_fragment");
+        return view("admin.inventorystocks.index")->with(compact('menu','inventorystocks_list_all'))->fragmentIf(Request()->ajax_call==1, "inventorystockss_fragment");
     }
 
     public function _index()

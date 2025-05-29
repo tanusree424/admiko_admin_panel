@@ -107,8 +107,8 @@ Inventory Stock
                 <tbody class="">
 
 				<tbody class="">
-@isset($inventorystock_list_all)
-    @forelse($inventorystock_list_all as $data)
+@isset($inventorystocks_list_all)
+    @forelse($inventorystocks_list_all as $data)
         <tr>
             <td data-id="{{ $data->id }}">
                 {{ $data->order_number }}

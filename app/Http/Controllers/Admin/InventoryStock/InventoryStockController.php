@@ -31,9 +31,9 @@ class InventoryStockController extends Controller
             ->startSearch($request->query("inventorystock_search"))
             ->orderByDesc("id")
             ->get();
-    return  dd($inventorystock_list_all);
-// return view("admin.inventorystocks.index", compact('menu', 'inventorystock_list_all'))
-//     ->fragmentIf($request->ajax_call == 1, "inventorystock_fragment");
+    // return  dd($inventorystocks_list_all);
+return view("admin.inventorystocks.index", compact('menu', 'inventorystocks_list_all'))
+    ->fragmentIf($request->ajax_call == 1, "inventorystocks_fragment");
 
     }
 

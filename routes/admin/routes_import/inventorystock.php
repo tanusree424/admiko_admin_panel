@@ -10,7 +10,7 @@ use Illuminate\Support\Facades\Route;
 Route::delete("inventorystocks/destroy", [InventInventoryStock\InventorystockControllerExtended::class,"destroy"])->name("inventorystock.delete");
 Route::resource("inventorystocks", InventoryStock\InventorystockControllerExtended::class)->parameters(["inventorystock" => "inventorystock_id"])->names("inventorystock")->except(["show"])->whereNumber("InventoryStock_id");
 
-Route::get('/inventorystocks/{id}', [InventoryStock\InventorystockController::class, 'showSummary']);
+Route::get('/inventorystocks/{id}/summary', [InventoryStock\InventorystockController::class, 'showSummary']);
 
 Route::get('/inventorystocks/exportExcel/{id}', [InventoryStock\InventorystockController::class, 'exportExcel']);
 Route::get('/inventorystocks/exportPdf/{orderId}/{userId}', [InventoryStock\InventorystockController::class, 'exportPdf']);
