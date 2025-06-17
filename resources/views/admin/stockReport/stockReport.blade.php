@@ -72,7 +72,7 @@
 </div>
 @endsection
 
-@push('scripts')
+@section('scripts')
 <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 
 <script>
@@ -199,5 +199,5 @@
         }
 
 </script>
-@endpush
+@endsection
 
