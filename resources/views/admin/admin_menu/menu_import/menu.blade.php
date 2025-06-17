@@ -226,17 +226,67 @@
 	</div>
 @endcanany
 @canany(['inventorystock_access'])
-	<div class="item{{ $menu['item'] === "inventorystocks" ? " active" : "" }}">
-		<a draggable="false" class="link" href="{{route("admin.inventorystock.index")}}">
+	<div class="dropdown js-ak-dropdown{{ $menu['folder'] == "inventorystocks" ? " open" : "" }}">
+		<div class="dropdown-item js-ak-dropdown-item">
+			<div class="item">
+				<a draggable="false" class="link" href="#">
+					<div class="icon">
+						<div class="font-awesome-icon">
+							<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 384 512"><path d="M64 464c-8.8 0-16-7.2-16-16V64c0-8.8 7.2-16 16-16H224v80c0 17.7 14.3 32 32 32h80V448c0 8.8-7.2 16-16 16H64zM64 0C28.7 0 0 28.7 0 64V448c0 35.3 28.7 64 64 64H320c35.3 0 64-28.7 64-64V154.5c0-17-6.7-33.3-18.7-45.3L274.7 18.7C262.7 6.7 246.5 0 229.5 0H64zm56 256c-13.3 0-24 10.7-24 24s10.7 24 24 24H264c13.3 0 24-10.7 24-24s-10.7-24-24-24H120zm0 96c-13.3 0-24 10.7-24 24s10.7 24 24 24H264c13.3 0 24-10.7 24-24s-10.7-24-24-24H120z"/></svg>
+						</div>
+					</div>
+					<div class="title">Inventory Stock</div>
+					<div class="icon action-icon">
+						<div class="font-awesome-icon">
+							<svg focusable="false" data-prefix="fas" data-icon="angle-right" class="svg-inline--fa fa-angle-right" role="img" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 256 512">
+								<path fill="currentColor" d="M64 448c-8.2 0-16.4-3.1-22.6-9.4-12.5-12.5-12.5-32.8 0-45.3L178.8 256 41.4 118.6c-12.5-12.5-12.5-32.8 0-45.3s32.8-12.5 45.3 0l160 160c12.5 12.5 12.5 32.8 0 45.3l-160 160c-6.3 6.2-14.5 9.4-22.6 9.4z"/>
+							</svg>
+						</div>
+					</div>
+				</a>
+			</div>
+		</div>
+
+		<div class="dropdown-container" {!! $menu['folder'] == "inventorystocks" ? ' style="display:block"' : '' !!}>
+			<div class="dropdown-menu-list">
+				<div class="item{{ $menu['item'] === "stock_list" ? " active" : "" }}">
+					<a draggable="false" class="link" href="{{ route('admin.inventorystock.index') }}">
+						<div class="icon">
+							<div class="font-awesome-icon">
+								<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512"><path d="M64 48C64 21.5 85.5 0 112 0H400c26.5 0 48 21.5 48 48V80H64V48zM64 128H448V464c0 26.5-21.5 48-48 48H112c-26.5 0-48-21.5-48-48V128z"/></svg>
+							</div>
+						</div>
+						<div class="title">Stock List</div>
+					</a>
+				</div>
+
+				<div class="item{{ $menu['item'] === "stock_transfer" ? " active" : "" }}">
+					<a draggable="false" class="link" href="{{ route('admin.stocktransfer.index') }}">
+						<div class="icon">
+							<div class="font-awesome-icon">
+								<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 576 512"><path d="M567.6 279.6c10-10 10-26.2 0-36.2l-96-96c-15.1-15.1-41-4.4-41 17v48H280c-13.3 0-24 10.7-24 24v48c0 13.3 10.7 24 24 24H430.6v48c0 21.4 25.9 32.1 41 17l96-96zM8.4 232.4c-10 10-10 26.2 0 36.2l96 96c15.1 15.1 41 4.4 41-17v-48H296c13.3 0 24-10.7 24-24V227c0-13.3-10.7-24-24-24H145.4v-48c0-21.4-25.9-32.1-41-17l-96 96z"/></svg>
+							</div>
+						</div>
+						<div class="title">Stock Transfer</div>
+					</a>
+				</div>
+			</div>
+		</div>
+	</div>
+@endcanany
+@canany(['report_access'])
+	<div class="item{{ $menu['item'] === "'report_access" ? " active" : "" }}">
+		<a draggable="false" class="link" href="{{route("admin.stock_transfer_report")}}">
 			<div class="icon">
 				<div class="font-awesome-icon">
 					<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 384 512"><path d="M64 464c-8.8 0-16-7.2-16-16V64c0-8.8 7.2-16 16-16H224v80c0 17.7 14.3 32 32 32h80V448c0 8.8-7.2 16-16 16H64zM64 0C28.7 0 0 28.7 0 64V448c0 35.3 28.7 64 64 64H320c35.3 0 64-28.7 64-64V154.5c0-17-6.7-33.3-18.7-45.3L274.7 18.7C262.7 6.7 246.5 0 229.5 0H64zm56 256c-13.3 0-24 10.7-24 24s10.7 24 24 24H264c13.3 0 24-10.7 24-24s-10.7-24-24-24H120zm0 96c-13.3 0-24 10.7-24 24s10.7 24 24 24H264c13.3 0 24-10.7 24-24s-10.7-24-24-24H120z"/></svg>
 				</div>
 			</div>
-			<div class="title">Inventory Stock</div>
+			<div class="title">Report</div>
 		</a>
 	</div>
 @endcanany
+
 @canany(['purchaseorderslogs_access'])
 	<div class="item{{ $menu['item'] === "purchaseorderslogs" ? " active" : "" }}">
 		<a draggable="false" class="link" href="{{route("admin.purchaseorderslogs.index")}}">

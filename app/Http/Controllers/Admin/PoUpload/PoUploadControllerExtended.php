@@ -20,15 +20,18 @@ use Illuminate\Support\Facades\Auth;
 use Excel;
 use DB;
 
+use Illuminate\Support\Facades\Log;
+
+
 class PoUploadControllerExtended extends PoUploadController
 {
 
 public function store(Request $request)
 {
-    DB::beginTransaction(); // Start transaction
+    DB::beginTransaction();
 
     try {
-        $userId = Auth::id(); 
+        $userId = Auth::id();
         $file = $request->file('select_po_template');
 
         if (!$file) {
@@ -50,16 +53,16 @@ public function store(Request $request)
         $currentMonthYear = Carbon::now()->format('my');
         $formattedUserId = strlen($userId) === 1 ? '0' . $userId : $userId;
 
-        $currentDate = Carbon::now()->toDateString();
-        $orderCount = DB::table('orders')
-            ->where('order_type', $orderType)
-            ->whereDate('created_at', $currentDate)
-            ->count();
+        // ✅ Unique by using time to the second
+        $orderNumber = sprintf(
+            "%s/%s/%s/%s",
+            $formattedUserId,
+            $orderType,
+            $currentMonthYear,
+            Carbon::now()->format('His') // HHMMSS
+        );
 
-        $nextSequence = $orderCount + 1;
-        $orderNumber = sprintf("%s/%s/%s/%03d", $formattedUserId, $orderType, $currentMonthYear, $nextSequence);
-
-        // Create empty order to get ID but we�ll roll back if anything fails
+        // Insert order
         $orderId = DB::table('orders')->insertGetId([
             'order_number' => $orderNumber,
             'prefix'       => $prefix,
@@ -70,30 +73,24 @@ public function store(Request $request)
             'updated_at'   => Carbon::now(),
         ]);
 
-        // Attempt to import the Excel file
         Excel::import(new PurchaseOrdersImport($orderId), $file);
 
-        // If import succeeds, commit
         DB::commit();
 
-        // Send mail
-        //$email = 'samirsing@gmail.com';
-       // Mail::to($email)->send(new POUploadedMail($email));
-	   // Step 4: Send email after success
-        $hardcodedEmail = 'tanubasuchoudhury1997@gmail.com';
-        Mail::to($hardcodedEmail)->send(new POUploadedMail($orderNumber));
+        // Send email
+        Mail::to('tanubasuchoudhury1997@gmail.com')->send(new POUploadedMail($orderNumber));
 
         return redirect()->route('admin.po_upload.preview')
             ->with("toast_success", "PO report uploaded and mail sent.");
 
-
-      //  return redirect()->route('admin.po_upload.preview');
     } catch (\Exception $ex) {
-        DB::rollBack(); // Undo DB changes
-        \Log::error("Error Creating Order: " . $ex->getMessage());
+        DB::rollBack();
+        \Log::error("Order Store Error: " . $ex->getMessage());
         return redirect()->back()->with("toast_error", $ex->getMessage());
     }
 }
+
+
 public function storffff(Request $request)
 {
     try {
@@ -195,34 +192,117 @@ public function storffff(Request $request)
         return view('admin.po-preview.index',$data);
     }
 
-    public function finalSubmit(Request $request)
-    {
+    // public function finalSubmit(Request $request)
+    // {
+    //     $purchaseOrders = DB::table('purchaseorders_preview')->get();
+
+    //     if($purchaseOrders->count() > 0) {
+    //         foreach($purchaseOrders as $row)
+    //         {
+    //             DB::table('purchaseorders')->insert([
+    //                 'distributorid' => $row->distributorid,
+    //                 'productid' => $row->productid,
+    //                 'ordertime' => $row->ordertime,
+    //                 'orderprice' => $row->orderprice,
+    //                 'orderqty' => $row->orderqty,
+    //                 'updatedtime' => Carbon::now(),
+    //                 'excelid' => 'PO Import',
+    //                 'status' => 'true',
+    //                 'orderid' => $row->orderid,
+    //                 'created_by' => $row->created_by,
+    //             ]);
+    //             //update order table set updatedtime = now() where id = $row->orderid
+    //             DB::table('orders')->where('id', $row->orderid)->update([
+    //                 'updated_at' => DB::raw('NOW()'),
+    //                 'updated_by' => Auth::id(),
+    //             ]);
+    //         }
+    //         DB::table('purchaseorders_preview')->truncate();
+    //     }
+
+    //     return redirect()->route('admin.purchaseorders.index')->with("toast_success", 'Purchase Orders Imported Successfully!');
+    // }
+
+
+public function finalSubmit(Request $request)
+{
+    DB::beginTransaction();
+
+    try {
         $purchaseOrders = DB::table('purchaseorders_preview')->get();
 
-        if($purchaseOrders->count() > 0) {
-            foreach($purchaseOrders as $row)
-            {
+        if ($purchaseOrders->count() > 0) {
+            foreach ($purchaseOrders as $row) {
+
+                // Insert into purchaseorders
                 DB::table('purchaseorders')->insert([
-                    'distributorid' => $row->distributorid,
-                    'productid' => $row->productid,
-                    'ordertime' => $row->ordertime,
-                    'orderprice' => $row->orderprice,
-                    'orderqty' => $row->orderqty,
-                    'updatedtime' => Carbon::now(),
-                    'excelid' => 'PO Import',
-                    'status' => 'true',
-                    'orderid' => $row->orderid,
-                    'created_by' => $row->created_by,
+                    'distributorid'   => $row->distributorid,
+                    'productid'       => $row->productid,
+                    'ordertime'       => $row->ordertime,
+                    'orderprice'      => $row->orderprice,
+                    'orderqty'        => $row->orderqty,
+                    'updatedtime'     => Carbon::now(),
+                    'excelid'         => 'PO Import',
+                    'status'          => 'true',
+                    'orderid'         => $row->orderid,
+                    'created_by'      => $row->created_by,
+                    'created_at'      => Carbon::now(),
+                    'updated_at'      => Carbon::now(),
                 ]);
-                //update order table set updatedtime = now() where id = $row->orderid
-                DB::table('orders')->where('id', $row->orderid)->update([
-                    'updated_at' => DB::raw('NOW()'),
-                    'updated_by' => Auth::id(),
+
+                // Update orders table
+                DB::table('orders')
+                    ->where('id', $row->orderid)
+                    ->update([
+                        'updated_at' => Carbon::now(),
+                        'updated_by' => Auth::id(),
+                    ]);
+
+                // Step 1: Get product by productid (not partcode)
+                $product = DB::table('products')->where('partcode', $row->productid)->first();
+                if (!$product) {
+                    continue; // Skip if no matching product
+                }
+
+                // Step 2: Get inventory_stock from inventory_stocks
+                $inventoryStock = DB::table('inventory_stocks')
+                    ->where('productid', $row->productid)
+                    ->value('inventory_stock'); // fetches single column
+
+                $inventoryStock = (int) $inventoryStock;
+                $orderQty = (int) $row->orderqty;
+                $restStock = $inventoryStock - $orderQty;
+
+                // Step 3: Insert into stock_transfer
+                DB::table('stock_transfer')->insert([
+                    'product_id'             => $product->partcode,
+                    'product_name'           => $product->productname,
+                    'brand_id'               => $product->brand,
+                    'category_id'            => $product->category,
+                    'subcategory_id'         => $product->subcategory,
+                    'purchaseorder_quantity' => $orderQty,
+                    'inventory_stock'        => $inventoryStock,
+                    'rest_stock'             => $restStock,
+                    'transfer_date'          => Carbon::now(),
+                    'created_at'             => Carbon::now(),
+                    'updated_at'             => Carbon::now(),
                 ]);
             }
+
+            // Clear preview table
             DB::table('purchaseorders_preview')->truncate();
         }
 
-        return redirect()->route('admin.purchaseorders.index')->with("toast_success", 'Purchase Orders Imported Successfully!');
+        DB::commit();
+
+        return redirect()->route('admin.purchaseorders.index')
+            ->with("toast_success", 'Purchase Orders Submitted. Inventory & Stock Transfer Updated!');
+    } catch (\Exception $e) {
+        DB::rollBack();
+        Log::error("finalSubmit error: " . $e->getMessage());
+
+        return back()->withErrors(['error' => 'Submission failed: ' . $e->getMessage()]);
     }
+}
+
 }
